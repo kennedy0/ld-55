@@ -4,6 +4,7 @@ from entities.bg import Bg
 from entities.board import Board
 from entities.game_manager import GameManager
 from entities.skull_spawner import SkullSpawner
+from entities.summon_circle import SummonCircle
 from entities.tile import Tile
 
 
@@ -23,6 +24,9 @@ class TestScene(Scene):
 
         # Board
         self.generate_board(3)
+
+        # FX
+        self.entities.add(SummonCircle())
 
     def generate_board(self, radius: int) -> None:
         # Create board

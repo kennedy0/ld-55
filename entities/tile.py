@@ -5,6 +5,12 @@ from engine import *
 
 if TYPE_CHECKING:
     from entities.board import Board
+    from entities.game_manager import GameManager
+
+
+TEAM_NONE = 0  # noqa
+TEAM_BLUE = 1  # noqa
+TEAM_RED =  2  # noqa
 
 
 class Tile(Entity):
@@ -18,11 +24,18 @@ class Tile(Entity):
         self.s = 0
         self.coordinates = (0, 0, 0)
 
-        self.hover_color_blue = Color(170, 238, 234)
+        self.is_free = True
+        self.team = TEAM_NONE
 
+        self.hover_color_neutral = Color.gray()
+        self.hover_color_blue = Color(0, 128, 255)
+        self.hover_color_red = Color.red()
+
+        self.game_manager: GameManager | None = None
         self.board: Board | None = None
 
     def start(self) -> None:
+        self.game_manager = self.find("GameManager")
         self.board = self.find("Board")
 
     def mouse_hovering(self) -> bool:
@@ -38,7 +51,14 @@ class Tile(Entity):
             self.set_normal_color()
 
     def set_hovered_color(self) -> None:
-        self.sprite.flash_color = self.hover_color_blue
+        if self.is_free:
+            if self.game_manager.is_blue_turn():
+                self.sprite.flash_color = self.hover_color_blue
+            elif self.game_manager.is_red_turn():
+                self.sprite.flash_color = self.hover_color_red
+        else:
+            self.sprite.flash_color = self.hover_color_neutral
+
         self.sprite.flash_opacity = 64
 
     def set_normal_color(self) -> None:

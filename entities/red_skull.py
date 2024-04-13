@@ -3,7 +3,7 @@ from engine import *
 from entities.skull import Skull
 
 
-class BlueSkull(Skull):
+class RedSkull(Skull):
     def __init__(self) -> None:
         super().__init__()
-        self.sprite = AnimatedSprite.from_atlas("atlas.png", "blue_skull")
+        self.sprite = AnimatedSprite.from_atlas("atlas.png", "red_skull")

@@ -1,14 +1,18 @@
+import math
+
 from engine import *
 
 
-class Skull(Entity):
+class SummonCircle(Entity):
     def __init__(self) -> None:
         super().__init__()
-        self.sprite = AnimatedSprite.empty()
+
+        self.sprite = AnimatedSprite.from_atlas("atlas.png", "summon_circle")
+        self.sprite.pivot.set_center()
+        self.sprite.play("default")
 
     def awake(self) -> None:
-        self.sprite.pivot.set_bottom_center()
-        self.sprite.play("default")
+        self.active = True
 
     def update(self) -> None:
         self.sprite.update()

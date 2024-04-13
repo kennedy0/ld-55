@@ -19,7 +19,7 @@
   },
   "blue_skull.0001": {
     "name": "blue_skull.0001",
-    "x": 42,
+    "x": 53,
     "y": 180,
     "frame_width": 11,
     "frame_height": 18,
@@ -55,7 +55,7 @@
   },
   "blue_skull.0003": {
     "name": "blue_skull.0003",
-    "x": 53,
+    "x": 64,
     "y": 180,
     "frame_width": 11,
     "frame_height": 18,
@@ -73,7 +73,7 @@
   },
   "blue_skull.0004": {
     "name": "blue_skull.0004",
-    "x": 64,
+    "x": 75,
     "y": 180,
     "frame_width": 11,
     "frame_height": 18,
@@ -105,6 +105,618 @@
       "tags": [],
       "duration": 100,
       "frame_number": 1
+    }
+  },
+  "red_skull.0001": {
+    "name": "red_skull.0001",
+    "x": 86,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "red_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 1
+    }
+  },
+  "red_skull.0002": {
+    "name": "red_skull.0002",
+    "x": 42,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 19,
+    "offset_x": 2,
+    "offset_y": 1,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "red_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 2
+    }
+  },
+  "red_skull.0003": {
+    "name": "red_skull.0003",
+    "x": 97,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "red_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 3
+    }
+  },
+  "red_skull.0004": {
+    "name": "red_skull.0004",
+    "x": 108,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "red_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 4
+    }
+  },
+  "summon_circle.0001": {
+    "name": "summon_circle.0001",
+    "x": 119,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 500,
+      "frame_number": 1
+    }
+  },
+  "summon_circle.0002": {
+    "name": "summon_circle.0002",
+    "x": 142,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 200,
+      "frame_number": 2
+    }
+  },
+  "summon_circle.0003": {
+    "name": "summon_circle.0003",
+    "x": 165,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 200,
+      "frame_number": 3
+    }
+  },
+  "summon_circle.0004": {
+    "name": "summon_circle.0004",
+    "x": 188,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 500,
+      "frame_number": 4
+    }
+  },
+  "summon_circle.0005": {
+    "name": "summon_circle.0005",
+    "x": 211,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 200,
+      "frame_number": 5
+    }
+  },
+  "summon_circle.0006": {
+    "name": "summon_circle.0006",
+    "x": 234,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle",
+      "tags": [],
+      "duration": 200,
+      "frame_number": 6
+    }
+  },
+  "summon_circle_backup.0001": {
+    "name": "summon_circle_backup.0001",
+    "x": 257,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 1
+    }
+  },
+  "summon_circle_backup.0002": {
+    "name": "summon_circle_backup.0002",
+    "x": 280,
+    "y": 180,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 2
+    }
+  },
+  "summon_circle_backup.0003": {
+    "name": "summon_circle_backup.0003",
+    "x": 0,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 3
+    }
+  },
+  "summon_circle_backup.0004": {
+    "name": "summon_circle_backup.0004",
+    "x": 23,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 4
+    }
+  },
+  "summon_circle_backup.0005": {
+    "name": "summon_circle_backup.0005",
+    "x": 46,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 5
+    }
+  },
+  "summon_circle_backup.0006": {
+    "name": "summon_circle_backup.0006",
+    "x": 69,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 6
+    }
+  },
+  "summon_circle_backup.0007": {
+    "name": "summon_circle_backup.0007",
+    "x": 92,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 7
+    }
+  },
+  "summon_circle_backup.0008": {
+    "name": "summon_circle_backup.0008",
+    "x": 115,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 8
+    }
+  },
+  "summon_circle_backup.0009": {
+    "name": "summon_circle_backup.0009",
+    "x": 138,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 9
+    }
+  },
+  "summon_circle_backup.0010": {
+    "name": "summon_circle_backup.0010",
+    "x": 161,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 10
+    }
+  },
+  "summon_circle_backup.0011": {
+    "name": "summon_circle_backup.0011",
+    "x": 184,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 11
+    }
+  },
+  "summon_circle_backup.0012": {
+    "name": "summon_circle_backup.0012",
+    "x": 207,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 12
+    }
+  },
+  "summon_circle_backup.0013": {
+    "name": "summon_circle_backup.0013",
+    "x": 230,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 13
+    }
+  },
+  "summon_circle_backup.0014": {
+    "name": "summon_circle_backup.0014",
+    "x": 253,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 14
+    }
+  },
+  "summon_circle_backup.0015": {
+    "name": "summon_circle_backup.0015",
+    "x": 276,
+    "y": 206,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 15
+    }
+  },
+  "summon_circle_backup.0016": {
+    "name": "summon_circle_backup.0016",
+    "x": 0,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 16
+    }
+  },
+  "summon_circle_backup.0017": {
+    "name": "summon_circle_backup.0017",
+    "x": 23,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 17
+    }
+  },
+  "summon_circle_backup.0018": {
+    "name": "summon_circle_backup.0018",
+    "x": 46,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 18
+    }
+  },
+  "summon_circle_backup.0019": {
+    "name": "summon_circle_backup.0019",
+    "x": 69,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 19
+    }
+  },
+  "summon_circle_backup.0020": {
+    "name": "summon_circle_backup.0020",
+    "x": 92,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 20
+    }
+  },
+  "summon_circle_backup.0021": {
+    "name": "summon_circle_backup.0021",
+    "x": 115,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 21
+    }
+  },
+  "summon_circle_backup.0022": {
+    "name": "summon_circle_backup.0022",
+    "x": 138,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 22
+    }
+  },
+  "summon_circle_backup.0023": {
+    "name": "summon_circle_backup.0023",
+    "x": 161,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 23
+    }
+  },
+  "summon_circle_backup.0024": {
+    "name": "summon_circle_backup.0024",
+    "x": 184,
+    "y": 222,
+    "frame_width": 23,
+    "frame_height": 16,
+    "offset_x": 6,
+    "offset_y": 8,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "summon_circle_backup",
+      "tags": [],
+      "duration": 125,
+      "frame_number": 24
     }
   }
 }

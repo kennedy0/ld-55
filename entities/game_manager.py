@@ -15,3 +15,9 @@ class GameManager(Entity):
 
     def is_red_turn(self) -> bool:
         return self.state == STATE_RED_TURN
+
+    def end_blue_turn(self) -> None:
+        self.state = STATE_RED_TURN
+
+    def end_red_turn(self) -> None:
+        self.state = STATE_BLUE_TURN
