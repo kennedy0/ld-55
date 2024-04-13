@@ -10,6 +10,9 @@ class RedPlayer(Player):
         self.name = "RedPlayer"
         self.tile_hover_color = Color.red()
 
+    def red(self) -> bool:
+        return True
+
     def create_skull(self) -> RedSkull:
         skull = RedSkull()
         self.scene.entities.add(skull)

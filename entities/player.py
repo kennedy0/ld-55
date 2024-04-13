@@ -3,7 +3,8 @@ from engine import *
 from entities.board import Board
 from entities.game_manager import GameManager
 from entities.tile import Tile
-from entities.skull import Skull
+from entities.red_skull import RedSkull
+from entities.blue_skull import BlueSkull
 
 
 class Player(Entity):
@@ -13,6 +14,12 @@ class Player(Entity):
         self.board: Board | None = None
 
         self.tile_hover_color = Color.gray()
+
+    def red(self) -> bool:
+        return False
+
+    def blue(self) -> bool:
+        return False
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -35,13 +42,18 @@ class Player(Entity):
                     self.end_turn()
 
     def summon_skull(self, tile: Tile) -> None:
-        skull = self.create_skull()
+        if self.red():
+            skull = RedSkull()
+        elif self.blue():
+            skull = BlueSkull()
+        else:
+            Log.error("Not red or blue...")
+            return
+
         skull.x = tile.x
         skull.y = tile.y + 4
         tile.skull = skull
+        self.scene.entities.add(skull)
 
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True
-
-    def create_skull(self) -> Skull:
-        raise NotImplementedError
