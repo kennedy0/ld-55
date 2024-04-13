@@ -21,6 +21,9 @@ class Board(Entity):
         self.tiles = {}
         self.hovered_tile: Tile | None = None
 
+        self.red_tiles = []
+        self.blue_tiles = []
+
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
 

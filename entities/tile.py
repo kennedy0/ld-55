@@ -28,10 +28,10 @@ class Tile(Entity):
         self.southeast: Tile | None = None
         self.neighbors: list[Tile] = []
 
-        self.skull: Skull | None = None
-
         self.game_manager: GameManager | None = None
         self.board: Board | None = None
+
+        self.skull: Skull | None = None
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
