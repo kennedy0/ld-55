@@ -19,6 +19,7 @@ class Board(Entity):
         self.name = "Board"
         self.radius = 0
         self.tiles = {}
+        self.hovered_tile: Tile | None = None
 
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
@@ -56,3 +57,9 @@ class Board(Entity):
         x = TILE_WIDTH * (3/2 * q)
         y = TILE_HEIGHT * (((math.sqrt(3)/2) * q) + (math.sqrt(3) * r)) * -1
         return Point(x, y)
+
+    def update(self) -> None:
+        # Unset the hovered tile if the mouse moves off of it
+        if self.hovered_tile:
+            if not self.hovered_tile.mouse_hovering():
+                self.hovered_tile = None

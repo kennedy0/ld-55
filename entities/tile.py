@@ -1,4 +1,10 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from engine import *
+
+if TYPE_CHECKING:
+    from entities.board import Board
 
 
 class Tile(Entity):
@@ -14,21 +20,29 @@ class Tile(Entity):
 
         self.hover_color_blue = Color(170, 238, 234)
 
+        self.board: Board | None = None
+
+    def start(self) -> None:
+        self.board = self.find("Board")
+
     def mouse_hovering(self) -> bool:
         if Mouse.world_position().distance_to(self.position()) < 10:
             return True
-
         return False
 
     def update(self) -> None:
-        self.update_color()
-
-    def update_color(self) -> None:
         if self.mouse_hovering():
-            self.sprite.flash_color = self.hover_color_blue
-            self.sprite.flash_opacity = 64
+            self.set_hovered_color()
+            self.board.hovered_tile = self
         else:
-            self.sprite.flash_opacity = 0
+            self.set_normal_color()
+
+    def set_hovered_color(self) -> None:
+        self.sprite.flash_color = self.hover_color_blue
+        self.sprite.flash_opacity = 64
+
+    def set_normal_color(self) -> None:
+        self.sprite.flash_opacity = 0
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())
