@@ -1,0 +1,20 @@
+{
+  "bg.0001": {
+    "name": "bg.0001",
+    "x": 0,
+    "y": 0,
+    "frame_width": 320,
+    "frame_height": 180,
+    "offset_x": 0,
+    "offset_y": 0,
+    "sprite_width": 320,
+    "sprite_height": 180,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "bg",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 1
+    }
+  }
+}

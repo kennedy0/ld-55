@@ -2,7 +2,7 @@ import sys
 
 from engine import *
 
-from game.scenes.test_scene import TestScene
+from scenes.test_scene import TestScene
 
 
 def main() -> int:
