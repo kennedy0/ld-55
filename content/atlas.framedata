@@ -17,6 +17,78 @@
       "frame_number": 1
     }
   },
+  "blue_skull.0001": {
+    "name": "blue_skull.0001",
+    "x": 42,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "blue_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 1
+    }
+  },
+  "blue_skull.0002": {
+    "name": "blue_skull.0002",
+    "x": 31,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 19,
+    "offset_x": 2,
+    "offset_y": 1,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "blue_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 2
+    }
+  },
+  "blue_skull.0003": {
+    "name": "blue_skull.0003",
+    "x": 53,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "blue_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 3
+    }
+  },
+  "blue_skull.0004": {
+    "name": "blue_skull.0004",
+    "x": 64,
+    "y": 180,
+    "frame_width": 11,
+    "frame_height": 18,
+    "offset_x": 2,
+    "offset_y": 2,
+    "sprite_width": 15,
+    "sprite_height": 20,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "blue_skull",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 4
+    }
+  },
   "hex.0001": {
     "name": "hex.0001",
     "x": 0,

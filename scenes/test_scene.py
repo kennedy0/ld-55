@@ -2,6 +2,8 @@ from engine import *
 
 from entities.bg import Bg
 from entities.board import Board
+from entities.game_manager import GameManager
+from entities.skull_spawner import SkullSpawner
 from entities.tile import Tile
 
 
@@ -12,7 +14,14 @@ class TestScene(Scene):
         self.main_camera.y = -90
 
     def load_entities(self) -> None:
+        # Managers
+        self.entities.add(GameManager())
+        self.entities.add(SkullSpawner())
+
+        # Background
         self.entities.add(Bg())
+
+        # Board
         self.generate_board(3)
 
     def generate_board(self, radius: int) -> None:
