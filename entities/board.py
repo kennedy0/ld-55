@@ -24,6 +24,29 @@ class Board(Entity):
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
 
+    def set_neighbors(self) -> None:
+        for tile in self.iter_tiles():
+            q, r, s = tile.coordinates
+
+            if northwest := self.get_tile(q-1, r, s+1):
+                tile.northwest = northwest
+                tile.neighbors.append(northwest)
+            if north := self.get_tile(q, r-1, s+1):
+                tile.north = north
+                tile.neighbors.append(north)
+            if northeast := self.get_tile(q+1, r-1, s):
+                tile.northeast = northeast
+                tile.neighbors.append(northeast)
+            if southwest := self.get_tile(q-1, r+1, s):
+                tile.southwest = southwest
+                tile.neighbors.append(southwest)
+            if south := self.get_tile(q, r+1, s-1):
+                tile.south = south
+                tile.neighbors.append(south)
+            if southeast := self.get_tile(q+1, r, s-1):
+                tile.northwest = southeast
+                tile.neighbors.append(southeast)
+
     def move_tiles(self) -> None:
         for tile in self.iter_tiles():
             tile.set_position(self.tile_to_world_position(tile.q, tile.r, tile.s))
@@ -36,11 +59,7 @@ class Board(Entity):
 
     def get_tile(self, q: int, r: int, s: int) -> Optional[Tile]:
         """ Get a single tile. """
-        tile = self.tiles.get((q, r, s))
-        if not tile:
-            Log.error(f"Tile {(q, r, s)} does not exist")
-
-        return tile
+        return self.tiles.get((q, r, s))
 
     def get_tiles(self, q: int, r: int, s: int, radius: int) -> list[Tile]:
         """ Get all tiles within a range of a coordinate. """

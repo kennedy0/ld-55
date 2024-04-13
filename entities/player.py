@@ -50,12 +50,12 @@ class Player(Entity):
             Log.error("Not red or blue...")
             return
 
+        self.scene.entities.add(skull)
         skull.x = tile.x
         skull.y = tile.y + 4
         tile.skull = skull
         skull.tile = tile
         skull.convert_neighbors()
-        self.scene.entities.add(skull)
 
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True

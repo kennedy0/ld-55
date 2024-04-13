@@ -34,6 +34,7 @@ class Skull(Entity):
         else:
             new_skull = BlueSkull()
 
+        self.scene.entities.add(new_skull)
         new_skull.x = self.x
         new_skull.y = self.y
         new_skull.tile = self.tile

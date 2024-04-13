@@ -65,3 +65,4 @@ class TestScene(Scene):
 
         # Setup board
         board.move_tiles()
+        board.set_neighbors()
