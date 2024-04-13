@@ -16,5 +16,23 @@
       "duration": 100,
       "frame_number": 1
     }
+  },
+  "hex.0001": {
+    "name": "hex.0001",
+    "x": 0,
+    "y": 180,
+    "frame_width": 31,
+    "frame_height": 26,
+    "offset_x": 2,
+    "offset_y": 6,
+    "sprite_width": 35,
+    "sprite_height": 33,
+    "metadata": {
+      "source_format": "aseprite",
+      "sprite_name": "hex",
+      "tags": [],
+      "duration": 100,
+      "frame_number": 1
+    }
   }
 }
