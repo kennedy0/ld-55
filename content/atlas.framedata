@@ -31,7 +31,7 @@
       "source_format": "aseprite",
       "sprite_name": "blue_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 1
     }
   },
@@ -49,7 +49,7 @@
       "source_format": "aseprite",
       "sprite_name": "blue_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 2
     }
   },
@@ -67,7 +67,7 @@
       "source_format": "aseprite",
       "sprite_name": "blue_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 3
     }
   },
@@ -85,7 +85,7 @@
       "source_format": "aseprite",
       "sprite_name": "blue_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 4
     }
   },
@@ -121,7 +121,7 @@
       "source_format": "aseprite",
       "sprite_name": "red_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 1
     }
   },
@@ -139,7 +139,7 @@
       "source_format": "aseprite",
       "sprite_name": "red_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 2
     }
   },
@@ -157,7 +157,7 @@
       "source_format": "aseprite",
       "sprite_name": "red_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 3
     }
   },
@@ -175,7 +175,7 @@
       "source_format": "aseprite",
       "sprite_name": "red_skull",
       "tags": [],
-      "duration": 100,
+      "duration": 150,
       "frame_number": 4
     }
   },

@@ -1,9 +1,10 @@
 from engine import *
 
 from entities.bg import Bg
+from entities.blue_player import BluePlayer
 from entities.board import Board
 from entities.game_manager import GameManager
-from entities.skull_spawner import SkullSpawner
+from entities.red_player import RedPlayer
 from entities.summon_circle import SummonCircle
 from entities.tile import Tile
 
@@ -16,8 +17,8 @@ class TestScene(Scene):
 
     def load_entities(self) -> None:
         # Managers
-        self.entities.add(GameManager())
-        self.entities.add(SkullSpawner())
+        game_manager = GameManager()
+        self.entities.add(game_manager)
 
         # Background
         self.entities.add(Bg())
@@ -26,7 +27,17 @@ class TestScene(Scene):
         self.generate_board(3)
 
         # FX
-        self.entities.add(SummonCircle())
+        # self.entities.add(SummonCircle())
+
+        # Players
+        blue_player = BluePlayer()
+        self.entities.add(blue_player)
+
+        red_player = RedPlayer()
+        self.entities.add(red_player)
+
+        # ToDo: TESTING
+        game_manager.current_player = blue_player
 
     def generate_board(self, radius: int) -> None:
         # Create board

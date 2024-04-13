@@ -6,6 +6,7 @@ from engine import *
 if TYPE_CHECKING:
     from entities.board import Board
     from entities.game_manager import GameManager
+    from entities.skull import Skull
 
 
 TEAM_NONE = 0  # noqa
@@ -24,12 +25,7 @@ class Tile(Entity):
         self.s = 0
         self.coordinates = (0, 0, 0)
 
-        self.is_free = True
-        self.team = TEAM_NONE
-
-        self.hover_color_neutral = Color.gray()
-        self.hover_color_blue = Color(0, 128, 255)
-        self.hover_color_red = Color.red()
+        self.skull: Skull | None = None
 
         self.game_manager: GameManager | None = None
         self.board: Board | None = None
@@ -43,26 +39,25 @@ class Tile(Entity):
             return True
         return False
 
+    def is_free(self) -> bool:
+        if self.skull:
+            return False
+
+        return True
+
     def update(self) -> None:
         if self.mouse_hovering():
-            self.set_hovered_color()
             self.board.hovered_tile = self
-        else:
-            self.set_normal_color()
 
-    def set_hovered_color(self) -> None:
-        if self.is_free:
-            if self.game_manager.is_blue_turn():
-                self.sprite.flash_color = self.hover_color_blue
-            elif self.game_manager.is_red_turn():
-                self.sprite.flash_color = self.hover_color_red
-        else:
-            self.sprite.flash_color = self.hover_color_neutral
+        self.update_hover_color()
 
-        self.sprite.flash_opacity = 64
-
-    def set_normal_color(self) -> None:
+    def update_hover_color(self) -> None:
         self.sprite.flash_opacity = 0
+        if self.is_free():
+            if self.game_manager.current_player:
+                if self.board.hovered_tile == self:
+                    self.sprite.flash_color = self.game_manager.current_player.tile_hover_color
+                    self.sprite.flash_opacity = 64
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())
