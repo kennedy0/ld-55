@@ -9,11 +9,6 @@ if TYPE_CHECKING:
     from entities.skull import Skull
 
 
-TEAM_NONE = 0  # noqa
-TEAM_BLUE = 1  # noqa
-TEAM_RED =  2  # noqa
-
-
 class Tile(Entity):
     def __init__(self) -> None:
         super().__init__()
@@ -24,6 +19,14 @@ class Tile(Entity):
         self.r = 0
         self.s = 0
         self.coordinates = (0, 0, 0)
+
+        self.northwest: Tile | None = None
+        self.north: Tile | None = None
+        self.northeast: Tile | None = None
+        self.southwest: Tile | None = None
+        self.south: Tile | None = None
+        self.southeast: Tile | None = None
+        self.neighbors: list[Tile] = []
 
         self.skull: Skull | None = None
 

@@ -15,10 +15,10 @@ class Player(Entity):
 
         self.tile_hover_color = Color.gray()
 
-    def red(self) -> bool:
+    def blue(self) -> bool:
         return False
 
-    def blue(self) -> bool:
+    def red(self) -> bool:
         return False
 
     def start(self) -> None:
@@ -53,6 +53,8 @@ class Player(Entity):
         skull.x = tile.x
         skull.y = tile.y + 4
         tile.skull = skull
+        skull.tile = tile
+        skull.convert_neighbors()
         self.scene.entities.add(skull)
 
     def end_turn(self) -> None:
