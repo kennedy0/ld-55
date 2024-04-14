@@ -22,6 +22,7 @@ class MainMenuEntity(GuiWidgetEntity):
         self.hovering = False
 
         self.normal_color = Color(169, 188, 191)
+        self.normal_color = Color(112, 123, 137)
         self.hover_color = Color(230, 238, 237)
 
         self.fade_in = False
@@ -36,7 +37,7 @@ class MainMenuEntity(GuiWidgetEntity):
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.x = 160 - self.text.width / 2
-        self.y = 90 + (self.row * 20)
+        self.y = 60 + (self.row * 20)
 
     def show(self, delay: float) -> None:
         self.fade_in = True

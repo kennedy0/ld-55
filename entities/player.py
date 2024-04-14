@@ -13,6 +13,8 @@ class Player(Entity):
         self.game_manager: GameManager | None = None
         self.board: Board | None = None
         self.team = ""
+        self.controller = "human"
+        self.focus = Point.zero()
 
         self.tile_highlight_color = Color.gray()
 
@@ -27,15 +29,13 @@ class Player(Entity):
         if not self.is_my_turn():
             return
 
-        self.update_input()
-
-    def update_input(self) -> None:
-        if Mouse.get_left_mouse_down():
-            if tile := self.board.hovered_tile:
-                if tile.is_free():
-                    if self.can_summon_on_tile(tile):
-                        self.summon_skull(tile)
-                        self.end_turn()
+        if self.controller == "computer":
+            self.update_computer_input()
+        elif self.controller == "tutorial":
+            self.update_tutorial_input()
+        else:
+            self.focus = Mouse.world_position()
+            self.update_human_input()
 
     def can_summon_on_tile(self, tile: Tile) -> bool:
         if self.team == "blue" and tile.blue_can_summon:
@@ -65,3 +65,17 @@ class Player(Entity):
 
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True
+
+    def update_human_input(self) -> None:
+        if Mouse.get_left_mouse_down():
+            if tile := self.board.hovered_tile:
+                if tile.is_free():
+                    if self.can_summon_on_tile(tile):
+                        self.summon_skull(tile)
+                        self.end_turn()
+
+    def update_computer_input(self) -> None:
+        pass
+
+    def update_tutorial_input(self) -> None:
+        pass

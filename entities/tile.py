@@ -76,8 +76,9 @@ class Tile(Entity):
         self.sprite.pivot.set_center()
 
     def mouse_hovering(self) -> bool:
-        if Mouse.world_position().distance_to(self.position()) < 10:
-            return True
+        if player := self.game_manager.current_player:
+            if player.focus.distance_to(self.position()) < 10:
+                return True
         return False
 
     def is_free(self) -> bool:

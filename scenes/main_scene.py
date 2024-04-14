@@ -9,7 +9,10 @@ from entities.summon_circle import SummonCircle
 from entities.tile import Tile
 from entities.ui_score import UiScore
 from entities.ui_game_ended import UiGameEnded
-from entities.ui_start_game import UiStartGame
+
+from entities.ui_tutorial import UiTutorial
+from entities.ui_1p import Ui1p
+from entities.ui_2p import Ui2p
 from entities.ui_quit_game import UiQuitGame
 
 
@@ -48,7 +51,9 @@ class MainScene(Scene):
         self.entities.add(UiScore())
 
         # Main Menu
-        self.entities.add(UiStartGame())
+        self.entities.add(UiTutorial())
+        self.entities.add(Ui1p())
+        self.entities.add(Ui2p())
         self.entities.add(UiQuitGame())
 
         # End Game
