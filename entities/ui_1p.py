@@ -17,5 +17,6 @@ class Ui1p(MainMenuEntity):
         super().update()
         if self.hovering:
             if Mouse.get_left_mouse_down():
+                self.game_manager.is_tutorial = False
                 self.game_manager.red_player.controller = "computer"
                 self.game_manager.start_game()

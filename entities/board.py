@@ -37,28 +37,35 @@ class Board(Entity):
         self.valid_blue_tiles = []  # List of tiles that are valid summon targets for blue
         self.valid_red_tiles = []   # List of tiles that are valid summon targets for red
 
-        self.blue_start_coordinates = [
+        self.blue_start_coordinates = []  # Coordinates that blue can always start on
+        self.red_start_coordinates = []   # Coordinates that red can always start on
+
+        self.normal_blue_start_coordinates = [
             (-3, 3, 0),
             (3, 0, -3),
             (0, -3, 3),
         ]
-        self.red_start_coordinates = [
+        self.normal_red_start_coordinates = [
             (0, 3, -3),
             (-3, 0, 3),
             (3, -3, 0),
         ]
 
-        self.tutorial_blue_start_coordinates = [
-
-        ]
-        self.tutorial_red_start_coordinates = [
-
-        ]
+        self.tutorial_blue_start_coordinates = [(-2, 1, 1)]
+        self.tutorial_red_start_coordinates = [(2, -1, -1)]
 
         self.missing_tile_coordinates = [
             [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
+            [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
+            [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],
             [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],
             [(-2, 3, -1), (-1, 3, -2), (1, 2, -3), (2, 1, -3), (3, -1, -2), (3, -2, -1), (2, -3, 1), (1, -3, 2), (-1, -2, 3), (-2, -1, 3), (-3, 1, 2), (-3, 2, 1)],
+        ]
+
+        self.missing_tile_coordinates_for_tutorial = [
+            (-2, 3, -1), (-1, 3, -2), (1, 2, -3), (2, 1, -3), (3, -1, -2), (3, -2, -1), (2, -3, 1), (1, -3, 2),
+            (-1, -2, 3), (-2, -1, 3), (-3, 1, 2), (-3, 2, 1),
+            (-3, 3, 0), (0, 3, -3), (3, 0, -3), (3, -3, 0), (0, -3, 3), (-3, 0, 3),
         ]
 
     def start(self) -> None:
@@ -106,9 +113,28 @@ class Board(Entity):
         self.valid_blue_tiles.clear()
         self.valid_red_tiles.clear()
 
-        coordinates_to_remove = random.choice(self.missing_tile_coordinates)
+        self.blue_start_coordinates.clear()
+        self.red_start_coordinates.clear()
+
+        if self.game_manager.is_tutorial:
+            for c in self.tutorial_blue_start_coordinates:
+                self.blue_start_coordinates.append(c)
+            for c in self.tutorial_red_start_coordinates:
+                self.red_start_coordinates.append(c)
+        else:
+            for c in self.normal_blue_start_coordinates:
+                self.blue_start_coordinates.append(c)
+            for c in self.normal_red_start_coordinates:
+                self.red_start_coordinates.append(c)
+
+        if self.game_manager.is_tutorial:
+            coordinates_to_remove = self.missing_tile_coordinates_for_tutorial
+        else:
+            coordinates_to_remove = random.choice(self.missing_tile_coordinates)
+
         for tile in self.iter_tiles():
             tile.enabled = False
+            tile.init_sprite()
             if tile.coordinates not in coordinates_to_remove:
                 self.new_game_tiles.append(tile)
 

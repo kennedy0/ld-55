@@ -127,22 +127,19 @@ class GameManager(Entity):
 
     def start_game(self) -> None:
         Log.info("Start Game!")
+        if self.is_tutorial:
+            Log.info("Tutorial mode")
+
         self.game_started = True
         self.game_ended = False
         self.turn_ended = False
         self.score_calculated = False
-        self.is_tutorial = False
         self.hide_main_menu()
 
         # Do board setup
         self.board_setup_finished = False
         self.board.setup_board_for_new_game()
         self.board.reveal_tiles()
-
-    def start_tutorial(self) -> None:
-        Log.info("Tutorial mode")
-        self.is_tutorial = True
-        self.start_game()
 
     def on_board_setup_finished(self) -> None:
         Log.info("Board setup finished")

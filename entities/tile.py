@@ -63,7 +63,6 @@ class Tile(Entity):
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.board = self.find("Board")
-        self.init_sprite()
 
     def init_sprite(self) -> None:
         if self.coordinates in self.board.blue_start_coordinates:
