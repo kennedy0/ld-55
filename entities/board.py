@@ -21,11 +21,15 @@ class Board(Entity):
         self.tiles = {}
         self.hovered_tile: Tile | None = None
 
-        self.red_tiles = []
-        self.blue_tiles = []
+        self.total_tiles = 0
+        self.free_tiles = 0
+        self.red_tiles = 0
+        self.blue_tiles = 0
 
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
+        self.total_tiles += 1
+        self.free_tiles += 1
 
     def set_neighbors(self) -> None:
         for tile in self.iter_tiles():

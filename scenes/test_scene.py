@@ -17,6 +17,10 @@ class TestScene(Scene):
         self.main_camera.y = -90
 
     def load_entities(self) -> None:
+        if __debug__:
+            from entities.debugger import Debugger
+            self.entities.add(Debugger())
+
         # Managers
         game_manager = GameManager()
         self.entities.add(game_manager)

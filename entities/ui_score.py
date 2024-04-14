@@ -21,14 +21,14 @@ class UiScore(Entity):
         self.bottom = 7 + self.y
         self.left = 2 + self.x
         self.right = 160 + self.x
-        self.width = 164
+        self.width = 158
         self.height = 6
 
         self.blue_rect = Rect.empty()
         self.red_rect = Rect.empty()
 
-        self.blue = Color.blue()
-        self.red = Color.red()
+        self.blue = Color(115, 150, 213)
+        self.red = Color(192, 104, 82)
 
         self.blue_score = 0
         self.red_score = 0
@@ -39,11 +39,24 @@ class UiScore(Entity):
         self.update_blue()
         self.update_red()
 
+    def update(self) -> None:
+        if self.board.blue_tiles != self.blue_score:
+            self.blue_score = self.board.blue_tiles
+            self.update_blue()
+
+        if self.board.red_tiles != self.red_score:
+            self.red_score = self.board.red_tiles
+            self.update_red()
+
     def update_blue(self) -> None:
-        self.blue_rect = Rect(self.left, self.top, 1, self.height)
+        p = self.board.blue_tiles / self.board.total_tiles
+        w = int(pmath.lerp(0, self.width, p))
+        self.blue_rect = Rect(self.left, self.top, w, self.height)
 
     def update_red(self) -> None:
-        self.red_rect = Rect(self.right - 1, self.top, 1, self.height)
+        p = self.board.red_tiles / self.board.total_tiles
+        w = int(pmath.lerp(0, self.width, p))
+        self.red_rect = Rect(self.right - w, self.top, w, self.height)
 
     def draw(self, camera: Camera) -> None:
         self.back.draw(camera, self.position())

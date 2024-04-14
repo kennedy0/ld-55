@@ -15,6 +15,7 @@ class ConvertBlast(Entity):
         super().__init__()
         self.sprite = AnimatedSprite.empty()
         self.target: Skull | None = None
+        self.converted_target = False
         self.color = ""
 
     @classmethod
@@ -34,11 +35,13 @@ class ConvertBlast(Entity):
     def update(self) -> None:
         self.sprite.update()
         if not self.sprite.is_playing:
-            self.target.convert()
-            explosion = Explosion.create(self, self.color)
-            explosion.x = self.target.x
-            explosion.y = self.target.y - 6
-            self.destroy()
+            if not self.converted_target:
+                self.converted_target = True
+                self.target.convert()
+                explosion = Explosion.create(self, self.color)
+                explosion.x = self.target.x
+                explosion.y = self.target.y - 6
+                self.destroy()
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())

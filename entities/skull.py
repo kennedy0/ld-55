@@ -7,15 +7,18 @@ from engine import *
 from entities.convert_blast import ConvertBlast
 
 if TYPE_CHECKING:
+    from entities.board import Board
     from entities.tile import Tile
 
 
 class Skull(Entity):
     def __init__(self) -> None:
         super().__init__()
+        self.board: Board | None = None
+
         self.sprite = AnimatedSprite.empty()
         self.tile: Tile | None = None
-        self.team: str | None = None
+        self.team: str = ""
         self.summoned_by_player = False
 
     def awake(self) -> None:
@@ -23,6 +26,7 @@ class Skull(Entity):
         self.sprite.play("default")
 
     def start(self) -> None:
+        self.board = self.find("Board")
         if self.summoned_by_player:
             self.convert_neighbors()
 

@@ -12,14 +12,9 @@ class Player(Entity):
         super().__init__()
         self.game_manager: GameManager | None = None
         self.board: Board | None = None
+        self.team = ""
 
         self.tile_hover_color = Color.gray()
-
-    def blue(self) -> bool:
-        return False
-
-    def red(self) -> bool:
-        return False
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -42,12 +37,12 @@ class Player(Entity):
                     self.end_turn()
 
     def summon_skull(self, tile: Tile) -> None:
-        if self.red():
+        if self.team == "red":
             skull = RedSkull()
-        elif self.blue():
+        elif self.team == "blue":
             skull = BlueSkull()
         else:
-            Log.error("Not red or blue...")
+            Log.error("Not red or blue")
             return
 
         self.scene.entities.add(skull)
