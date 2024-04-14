@@ -4,6 +4,8 @@ from typing import Self, TYPE_CHECKING
 
 from engine import *
 
+from entities.explosion import Explosion
+
 if TYPE_CHECKING:
     from entities.skull import Skull
 
@@ -13,11 +15,13 @@ class ConvertBlast(Entity):
         super().__init__()
         self.sprite = AnimatedSprite.empty()
         self.target: Skull | None = None
+        self.color = ""
 
     @classmethod
     def create(cls, parent: Skull, direction: str) -> Self:
         cb = cls()
         cb.sprite = AnimatedSprite.from_atlas("atlas.png", f"{parent.team}_blast_{direction}")
+        cb.color = parent.team
         cb.sprite.pivot.set_center()
         cb.sprite.play("default")
         cb.sprite.get_animation("default").loop = False
@@ -30,6 +34,9 @@ class ConvertBlast(Entity):
         self.sprite.update()
         if not self.sprite.is_playing:
             self.target.convert()
+            explosion = Explosion.create(self, self.color)
+            explosion.x = self.target.x
+            explosion.y = self.target.y - 6
             self.destroy()
 
     def draw(self, camera: Camera) -> None:
