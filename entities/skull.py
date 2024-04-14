@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from engine import *
 
+from entities.convert_blast import ConvertBlast
+
 if TYPE_CHECKING:
     from entities.tile import Tile
 
@@ -14,16 +16,21 @@ class Skull(Entity):
         self.sprite = AnimatedSprite.empty()
         self.tile: Tile | None = None
         self.team: str | None = None
+        self.summoned_by_player = False
 
     def awake(self) -> None:
         self.sprite.pivot.set_bottom_center()
         self.sprite.play("default")
 
+    def start(self) -> None:
+        if self.summoned_by_player:
+            self.convert_neighbors()
+
     def convert_neighbors(self) -> None:
-        for tile in self.tile.neighbors:
+        for direction, tile in self.tile.neighbors.items():
             if skull := tile.skull:
                 if self.team != skull.team:
-                    skull.convert()
+                    blast = ConvertBlast.create(self, direction)
 
     def convert(self) -> None:
         from entities.blue_skull import BlueSkull

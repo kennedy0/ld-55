@@ -26,7 +26,7 @@ class Tile(Entity):
         self.southwest: Tile | None = None
         self.south: Tile | None = None
         self.southeast: Tile | None = None
-        self.neighbors: list[Tile] = []
+        self.neighbors: dict[str, Tile] = {}
 
         self.game_manager: GameManager | None = None
         self.board: Board | None = None

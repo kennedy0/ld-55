@@ -31,24 +31,24 @@ class Board(Entity):
         for tile in self.iter_tiles():
             q, r, s = tile.coordinates
 
-            if northwest := self.get_tile(q-1, r, s+1):
+            if northwest := self.get_tile(q-1, r+1, s):
                 tile.northwest = northwest
-                tile.neighbors.append(northwest)
-            if north := self.get_tile(q, r-1, s+1):
+                tile.neighbors['nw'] = northwest
+            if north := self.get_tile(q, r+1, s-1):
                 tile.north = north
-                tile.neighbors.append(north)
-            if northeast := self.get_tile(q+1, r-1, s):
+                tile.neighbors['n'] = north
+            if northeast := self.get_tile(q+1, r, s-1):
                 tile.northeast = northeast
-                tile.neighbors.append(northeast)
-            if southwest := self.get_tile(q-1, r+1, s):
+                tile.neighbors['ne'] = northeast
+            if southwest := self.get_tile(q-1, r, s+1):
                 tile.southwest = southwest
-                tile.neighbors.append(southwest)
-            if south := self.get_tile(q, r+1, s-1):
+                tile.neighbors['sw'] = southwest
+            if south := self.get_tile(q, r-1, s+1):
                 tile.south = south
-                tile.neighbors.append(south)
-            if southeast := self.get_tile(q+1, r, s-1):
+                tile.neighbors['s'] = south
+            if southeast := self.get_tile(q+1, r-1, s):
                 tile.northwest = southeast
-                tile.neighbors.append(southeast)
+                tile.neighbors['se'] = southeast
 
     def move_tiles(self) -> None:
         for tile in self.iter_tiles():

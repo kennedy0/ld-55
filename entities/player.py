@@ -55,7 +55,7 @@ class Player(Entity):
         skull.y = tile.y + 4
         tile.skull = skull
         skull.tile = tile
-        skull.convert_neighbors()
+        skull.summoned_by_player = True
 
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True
