@@ -12,8 +12,7 @@ if TYPE_CHECKING:
 class Tile(Entity):
     def __init__(self) -> None:
         super().__init__()
-        self.sprite = Sprite.from_atlas("atlas.png", "hex")
-        self.sprite.pivot.set_center()
+        self.sprite = Sprite.empty()
 
         self.q = 0
         self.r = 0
@@ -41,6 +40,17 @@ class Tile(Entity):
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.board = self.find("Board")
+        self.init_sprite()
+
+    def init_sprite(self) -> None:
+        if self.coordinates in self.board.blue_start_coordinates:
+            self.sprite = Sprite.from_atlas("atlas.png", "hex_blue_starter")
+        elif self.coordinates in self.board.red_start_coordinates:
+            self.sprite = Sprite.from_atlas("atlas.png", "hex_red_starter")
+        else:
+            self.sprite = Sprite.from_atlas("atlas.png", "hex")
+
+        self.sprite.pivot.set_center()
 
     def mouse_hovering(self) -> bool:
         if Mouse.world_position().distance_to(self.position()) < 10:

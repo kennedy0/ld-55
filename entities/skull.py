@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from engine import *
 
 from entities.convert_blast import ConvertBlast
+from entities.summon_fx import SummonFx
 
 if TYPE_CHECKING:
     from entities.board import Board
@@ -18,11 +19,12 @@ class Skull(Entity):
         self.board: Board | None = None
 
         self.sprite = AnimatedSprite.empty()
+        self.visible = False
+
         self.tile: Tile | None = None
         self.team: str = ""
 
         self.neighbors_to_convert: list[tuple[str, Skull]] = []
-
         self.convert_neighbor_delay = .1
         self.convert_neighbor_timer = 0
 
@@ -37,6 +39,8 @@ class Skull(Entity):
             self.board.blue_tiles += 1  # noqa
         if self.team == "red":
             self.board.red_tiles += 1  # noqa
+
+        summon_fx = SummonFx.create(self)
 
     def get_neighboring_opponents(self) -> None:
         for direction, tile in self.tile.neighbors.items():
@@ -65,10 +69,11 @@ class Skull(Entity):
         self.update_timers()
 
         if self.neighbors_to_convert:
-            if self.convert_neighbor_timer <= 0:
-                self.convert_neighbor_timer = self.convert_neighbor_delay
-                direction, neighbor = self.neighbors_to_convert.pop()
-                self.convert_neighbor(direction, neighbor)
+            if self.visible:
+                if self.convert_neighbor_timer <= 0:
+                    self.convert_neighbor_timer = self.convert_neighbor_delay
+                    direction, neighbor = self.neighbors_to_convert.pop()
+                    self.convert_neighbor(direction, neighbor)
 
         self.sprite.update()
 
@@ -82,7 +87,8 @@ class Skull(Entity):
         blast.target = neighbor
 
     def draw(self, camera: Camera) -> None:
-        self.sprite.draw(camera, self.position())
+        if self.visible:
+            self.sprite.draw(camera, self.position())
 
     def on_deactivate(self) -> None:
         if self.team == "blue":

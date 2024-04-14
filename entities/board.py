@@ -27,12 +27,12 @@ class Board(Entity):
         self.red_tiles = 0
         self.blue_tiles = 0
 
-        self.blue_start_positions = [
+        self.blue_start_coordinates = [
             (-3, 3, 0),
             (3, 0, -3),
             (0, -3, 3),
         ]
-        self.red_start_positions = [
+        self.red_start_coordinates = [
             (0, 3, -3),
             (-3, 0, 3),
             (3, -3, 0),
@@ -116,16 +116,17 @@ class Board(Entity):
             tile.red_can_summon = False
 
             if not tile.skull:
-                if tile.coordinates in self.blue_start_positions:
+                if tile.coordinates in self.blue_start_coordinates:
                     tile.blue_can_summon = True
-                if tile.coordinates in self.red_start_positions:
+                elif tile.coordinates in self.red_start_coordinates:
                     tile.red_can_summon = True
-                for n in tile.neighbors.values():
-                    if s := n.skull:
-                        if s.team == "blue":
-                            tile.blue_can_summon = True
-                        if s.team == "red":
-                            tile.red_can_summon = True
+                else:
+                    for n in tile.neighbors.values():
+                        if s := n.skull:
+                            if s.team == "blue":
+                                tile.blue_can_summon = True
+                            if s.team == "red":
+                                tile.red_can_summon = True
 
                 if tile.blue_can_summon:
                     self.valid_blue_tiles.append(tile)
