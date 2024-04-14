@@ -31,8 +31,8 @@ class TestScene(Scene):
         # Board
         self.generate_board(3)
 
-        # FX
-        # self.entities.add(SummonCircle())
+        # Summon Circle
+        self.entities.add(SummonCircle())
 
         # Players
         blue_player = BluePlayer()
@@ -45,7 +45,7 @@ class TestScene(Scene):
         self.entities.add(UiScore())
 
         # ToDo: TESTING
-        game_manager.current_player = blue_player
+        game_manager.next_player = blue_player
 
     def generate_board(self, radius: int) -> None:
         # Create board
@@ -74,3 +74,4 @@ class TestScene(Scene):
         # Setup board
         board.move_tiles()
         board.set_neighbors()
+        board.set_initial_summon_tiles()

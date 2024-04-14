@@ -35,13 +35,15 @@ class GameManager(Entity):
     def update(self) -> None:
         self.update_timers()
 
+        # End Turn
         if self.turn_ended:
             self.turn_ended = False
             self.on_turn_ended()
 
+        # Start Turn
         if not self.current_player:
             if self.turn_end_timer <= 0:
-                self.on_next_turn()
+                self.on_turn_start()
 
     def update_timers(self) -> None:
         self.turn_end_timer -= Time.delta_time
@@ -67,7 +69,13 @@ class GameManager(Entity):
         # Unset current player
         self.current_player = None
 
-    def on_next_turn(self) -> None:
+        # Board Updates
+        self.board.set_tile_highlights()
+
+    def on_turn_start(self) -> None:
         # Set current player
         self.current_player = self.next_player
         self.next_player = None
+
+        # Board Updates
+        self.board.set_tile_highlights()

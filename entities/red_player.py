@@ -8,4 +8,4 @@ class RedPlayer(Player):
         super().__init__()
         self.name = "RedPlayer"
         self.team = "red"
-        self.tile_hover_color = Color.red()
+        self.tile_highlight_color = Color.red()

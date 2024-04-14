@@ -7,6 +7,7 @@ from engine import *
 
 if TYPE_CHECKING:
     from entities.tile import Tile
+    from entities.game_manager import GameManager
 
 
 TILE_WIDTH = 14
@@ -25,6 +26,11 @@ class Board(Entity):
         self.free_tiles = 0
         self.red_tiles = 0
         self.blue_tiles = 0
+
+        self.game_manager: GameManager | None = None
+
+    def start(self) -> None:
+        self.game_manager = self.find("GameManager")
 
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
@@ -54,6 +60,15 @@ class Board(Entity):
                 tile.northwest = southeast
                 tile.neighbors['se'] = southeast
 
+    def set_initial_summon_tiles(self) -> None:
+        self.get_tile(-3, 3, 0).blue_can_summon = True
+        self.get_tile(3, 0, -3).blue_can_summon = True
+        self.get_tile(0, -3, 3).blue_can_summon = True
+
+        self.get_tile(0, 3, -3).red_can_summon = True
+        self.get_tile(-3, 0, 3).red_can_summon = True
+        self.get_tile(3, -3, 0).red_can_summon = True
+
     def move_tiles(self) -> None:
         for tile in self.iter_tiles():
             tile.set_position(self.tile_to_world_position(tile.q, tile.r, tile.s))
@@ -75,6 +90,17 @@ class Board(Entity):
                 for k in range(s-radius, s+radius+1):
                     if i + j + k == 0:
                         yield self.get_tile(i, j, k)
+
+    def set_tile_highlights(self):
+        player = self.game_manager.current_player
+        if player:
+            color = player.tile_highlight_color
+
+        for tile in self.iter_tiles():
+            tile.clear_highlight()
+            if player:
+                if player.can_summon_on_tile(tile):
+                    tile.set_highlight(color)
 
     @staticmethod
     def tile_to_world_position(q: int, r: int, s: int) -> Point:

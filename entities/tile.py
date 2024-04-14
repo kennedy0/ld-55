@@ -33,7 +33,26 @@ class Tile(Entity):
 
         self.skull: Skull | None = None
 
+        self._blue_can_summon = False
+        self._red_can_summon = False
+
         self.debug_text = Text("fonts/NotJamOldStyle11.11.png")
+
+    @property
+    def blue_can_summon(self) -> bool:
+        return self._blue_can_summon
+
+    @blue_can_summon.setter
+    def blue_can_summon(self, value: bool) -> None:
+        self._blue_can_summon = value
+
+    @property
+    def red_can_summon(self) -> bool:
+        return self._red_can_summon
+
+    @red_can_summon.setter
+    def red_can_summon(self, value: bool) -> None:
+        self._red_can_summon = value
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -54,15 +73,13 @@ class Tile(Entity):
         if self.mouse_hovering():
             self.board.hovered_tile = self
 
-        self.update_hover_color()
+    def set_highlight(self, color: Color) -> None:
+        self.sprite.flash_color = color
+        self.sprite.flash_opacity = 32
 
-    def update_hover_color(self) -> None:
+    def clear_highlight(self) -> None:
+        self.sprite.flash_color = Color.white()
         self.sprite.flash_opacity = 0
-        if self.is_free():
-            if self.game_manager.current_player:
-                if self.board.hovered_tile == self:
-                    self.sprite.flash_color = self.game_manager.current_player.tile_hover_color
-                    self.sprite.flash_opacity = 64
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())

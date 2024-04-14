@@ -8,4 +8,4 @@ class BluePlayer(Player):
         super().__init__()
         self.name = "BluePlayer"
         self.team = "blue"
-        self.tile_hover_color = Color(0, 128, 255)
+        self.tile_highlight_color = Color(0, 128, 255)

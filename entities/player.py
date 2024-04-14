@@ -14,7 +14,7 @@ class Player(Entity):
         self.board: Board | None = None
         self.team = ""
 
-        self.tile_hover_color = Color.gray()
+        self.tile_highlight_color = Color.gray()
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -33,8 +33,17 @@ class Player(Entity):
         if Mouse.get_left_mouse_down():
             if tile := self.board.hovered_tile:
                 if tile.is_free():
-                    self.summon_skull(tile)
-                    self.end_turn()
+                    if self.can_summon_on_tile(tile):
+                        self.summon_skull(tile)
+                        self.end_turn()
+
+    def can_summon_on_tile(self, tile: Tile) -> bool:
+        if self.team == "blue" and tile.blue_can_summon:
+            return True
+        if self.team == "red" and tile.red_can_summon:
+            return True
+
+        return False
 
     def summon_skull(self, tile: Tile) -> None:
         if self.team == "red":

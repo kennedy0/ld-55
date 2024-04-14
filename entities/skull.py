@@ -33,6 +33,11 @@ class Skull(Entity):
     def start(self) -> None:
         self.board = self.find("Board")
 
+        if self.team == "blue":
+            self.board.blue_tiles += 1  # noqa
+        if self.team == "red":
+            self.board.red_tiles += 1  # noqa
+
     def get_neighboring_opponents(self) -> None:
         for direction, tile in self.tile.neighbors.items():
             if skull := tile.skull:
@@ -78,3 +83,9 @@ class Skull(Entity):
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())
+
+    def on_deactivate(self) -> None:
+        if self.team == "blue":
+            self.board.blue_tiles -= 1
+        if self.team == "red":
+            self.board.red_tiles -= 1
