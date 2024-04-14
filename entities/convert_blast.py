@@ -25,6 +25,7 @@ class ConvertBlast(Entity):
         cb.sprite.pivot.set_center()
         cb.sprite.play("default")
         cb.sprite.get_animation("default").loop = False
+        cb.sprite.get_animation("default").set_duration(400)  # original duration = 500
         cb.x = parent.x
         cb.y = parent.y - 6
         parent.scene.entities.add(cb)
