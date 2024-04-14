@@ -23,12 +23,14 @@ class Player(Entity):
         self.thinking_timer = 0
         self.thinking_timer_max = 1
 
-        self.focus = Point.zero()
+        self.focus = Point(999, 999)
         self.possible_tiles = []
         self.target_tile: Tile | None = None
 
         self.has_focused_tile = False
         self.has_summoned = False
+
+        self.tutorial_step_started = False
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -41,7 +43,7 @@ class Player(Entity):
         if self.controller == "computer":
             # Reset
             self.thinking_timer = self.thinking_timer_max
-            self.focus = Point.zero()
+            self.focus = Point(999, 999)
             self.target_tile = None
             self.possible_tiles.clear()
             self.has_focused_tile = False
@@ -132,4 +134,35 @@ class Player(Entity):
             self.end_turn()
 
     def update_tutorial_input(self) -> None:
-        pass
+        if self.thinking_timer > 0:
+            return
+
+        if self.game_manager.tutorial_step == 1:
+            tile = self.board.get_tile(2, -1, -1)
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.focus = tile.position()
+                self.thinking_timer = 4
+            else:
+                self.summon_skull(tile)
+                self.end_turn()
+
+        if self.game_manager.tutorial_step == 3:
+            tile = self.board.get_tile(1, 0, -1)
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.focus = tile.position()
+                self.thinking_timer = 2
+            else:
+                self.summon_skull(tile)
+                self.end_turn()
+
+        if self.game_manager.tutorial_step in (5, 6):
+            tile = self.board.valid_red_tiles[0]
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.focus = tile.position()
+                self.thinking_timer = 2
+            else:
+                self.summon_skull(tile)
+                self.end_turn()

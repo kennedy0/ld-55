@@ -59,6 +59,7 @@ class GameManager(Entity):
         self.tutorial_step = 0
         self.tutorial_step_started = False
         self.tutorial_delay_timer = 0
+        self.tutorial_game_end_message = ""
 
     def start(self) -> None:
         self.board = self.find("Board")
@@ -100,6 +101,8 @@ class GameManager(Entity):
                 Log.info("Forfeited")
                 self.forfeit_timer = 0
                 self.game_ended = True
+                if self.is_tutorial:
+                    self.tutorial_game_end_message = "Tutorial\nCancelled"
                 self.check_for_game_end()
                 return
         else:
@@ -250,7 +253,7 @@ class GameManager(Entity):
             blue_score = self.board.blue_tiles
             red_score = self.board.red_tiles
             if self.is_tutorial:
-                self.ui_game_ended.set_tutorial()
+                self.ui_game_ended.set_tutorial(self.tutorial_game_end_message)
             elif blue_score > red_score:
                 self.ui_game_ended.set_blue()
             elif red_score > blue_score:
@@ -282,24 +285,74 @@ class GameManager(Entity):
         self.show_main_menu()
 
     def update_tutorial(self) -> None:
-        # Click to Summon
+        self.tutorial_game_end_message = "Tutorial\nComplete"
+        self.tutorial_text.text = ""
+
         if self.tutorial_step == 0:
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
-                self.tutorial_text.show_text("Click to summon")
+                self.tutorial_text.show_text("Summon a spirit")
             else:
                 # Conditions to proceed
                 if self.current_player == self.red_player:
                     self.next_tutorial_step()
 
-        # Opponent
         if self.tutorial_step == 1:
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
-                self.tutorial_text.show_text("I summon next")
+                self.red_player.tutorial_step_started = True
+                self.tutorial_text.show_text("Now I summon")
             else:
                 # Conditions to proceed
                 if self.current_player == self.blue_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 2:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("Summon next to allies")
+            else:
+                # Conditions to proceed
+                if self.current_player == self.red_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 3:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.red_player.tutorial_step_started = True
+            else:
+                # Conditions to proceed
+                if self.current_player == self.blue_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 4:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("Turn opponents into allies")
+                self.board.update_valid_tiles_for_tutorial()
+            else:
+                # Conditions to proceed
+                if self.current_player == self.red_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 5:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.red_player.tutorial_step_started = True
+                self.tutorial_text.show_text("You are vulnerable, too")
+            else:
+                # Conditions to proceed
+                if self.current_player == self.blue_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 6:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.red_player.tutorial_step_started = True
+                self.tutorial_text.show_text("Summon the most spirits to win")
+            else:
+                # Conditions to proceed
+                if False:
                     self.next_tutorial_step()
 
     def next_tutorial_step(self) -> None:

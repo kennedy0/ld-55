@@ -19,8 +19,8 @@ class UiGameEnded(Entity):
         self.x = 160
         self.y = 90
 
-    def set_tutorial(self) -> None:
-        self.text.text = "Tutorial\nCancelled"
+    def set_tutorial(self, text: str) -> None:
+        self.text.text = text
         self.text.color = Color(169, 188, 191)
         self.text.align_vertical_center()
         self.text.align_horizontal_center()

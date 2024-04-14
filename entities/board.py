@@ -63,9 +63,14 @@ class Board(Entity):
         ]
 
         self.missing_tile_coordinates_for_tutorial = [
+            # Outer border
             (-2, 3, -1), (-1, 3, -2), (1, 2, -3), (2, 1, -3), (3, -1, -2), (3, -2, -1), (2, -3, 1), (1, -3, 2),
             (-1, -2, 3), (-2, -1, 3), (-3, 1, 2), (-3, 2, 1),
             (-3, 3, 0), (0, 3, -3), (3, 0, -3), (3, -3, 0), (0, -3, 3), (-3, 0, 3),
+
+            # Top/bottom strip after
+            (-2, 2, 0), (-1, 2, -1), (0, 2, -2), (1, 1, -2), (2, 0, -2),
+            (-2, 0, 2), (-1, -1, 2), (0, -2, 2), (1, -2, 1), (2, -2, 0),
         ]
 
     def start(self) -> None:
@@ -247,3 +252,17 @@ class Board(Entity):
         if self.hovered_tile:
             if not self.hovered_tile.mouse_hovering():
                 self.hovered_tile = None
+
+    def update_valid_tiles_for_tutorial(self) -> None:
+        if self.game_manager.tutorial_step == 4:
+            for tile in self.valid_blue_tiles:
+                tile.blue_can_summon = False
+
+            self.valid_blue_tiles.clear()
+
+            for coordinate in [(0, 0, 0)]:
+                tile = self.get_tile(*coordinate)
+                tile.blue_can_summon = True
+                self.valid_blue_tiles.append(tile)
+
+        self.set_tile_highlights()
