@@ -14,6 +14,7 @@ class UiQuitGame(MainMenuEntity):
         self.row = 3.5
 
     def update(self) -> None:
+        super().update()
         if self.hovering:
             if Mouse.get_left_mouse_down():
                 Engine.stop()

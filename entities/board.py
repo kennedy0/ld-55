@@ -83,7 +83,16 @@ class Board(Entity):
             tile.z_depth = -tile.y + 100
 
     def setup_board_for_new_game(self) -> None:
+        self.total_tiles = 0
+        self.enabled_tiles = 0
+        self.revealed_tiles = 0
+        self.free_tiles = 0
+        self.blue_tiles = 0
+        self.red_tiles = 0
         self.new_game_tiles.clear()
+        self.valid_blue_tiles.clear()
+        self.valid_red_tiles.clear()
+
         for tile in self.iter_tiles():
             self.new_game_tiles.append(tile)
 

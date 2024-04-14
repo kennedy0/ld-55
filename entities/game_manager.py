@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import sdl2
+
 from engine import *
 
 if TYPE_CHECKING:
@@ -46,6 +48,10 @@ class GameManager(Entity):
         self.time_between_turns = .3
         self.turn_end_timer = 0
 
+        # Forfeit
+        self.forfeit_timer = 0
+        self.forfeit_max_time = 1
+
     def start(self) -> None:
         self.board = self.find("Board")
         self.ui_game_ended = self.find("UiGameEnded")
@@ -55,6 +61,7 @@ class GameManager(Entity):
         for entity in self.scene.entities:
             if "MainMenu" in entity.tags:
                 self.main_menu_entities.append(entity)
+                entity.active = False
             if "GameUI" in entity.tags:
                 self.game_ui_entities.append(entity)
 
@@ -69,6 +76,16 @@ class GameManager(Entity):
             return
 
         self.update_timers()
+
+        # Forfeit
+        if Keyboard.get_key(sdl2.SDLK_ESCAPE):
+            self.forfeit_timer += Time.delta_time
+            if self.forfeit_timer > self.forfeit_max_time:
+                Log.info("Forfeit")
+                self.turn_ended = True
+                self.game_ended = True
+        else:
+            self.forfeit_timer = 0
 
         # Board setup
         if not self.board_setup_finished:
@@ -116,6 +133,8 @@ class GameManager(Entity):
         self.board.reveal_tiles()
 
     def on_board_setup_finished(self) -> None:
+        Log.info("Board setup finished")
+
         # UI
         self.show_game_ui()
 
@@ -162,7 +181,7 @@ class GameManager(Entity):
 
     def show_main_menu(self) -> None:
         for i, entity in enumerate(self.main_menu_entities):
-            entity.show(delay=i * .5)
+            entity.show(delay=i * .2)
 
     def hide_main_menu(self) -> None:
         for i, entity in enumerate(self.main_menu_entities):
@@ -181,6 +200,7 @@ class GameManager(Entity):
         if self.game_ended:
             Log.info("Game Ended!")
             self.game_started = False
+            self.board_setup_finished = False
             self.board_teardown_started = False
             self.board_teardown_finished = False
 
@@ -200,9 +220,11 @@ class GameManager(Entity):
         # Show the winner
         if self.ui_game_ended.is_animating:
             return
+        self.hide_game_ui()
 
         # Tear down the board
         if not self.board_teardown_started:
+            self.board_teardown_started = True
             self.board.tear_down()
         if not self.board_teardown_finished:
             if self.board.revealed_tiles == 0:

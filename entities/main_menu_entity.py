@@ -87,9 +87,9 @@ class MainMenuEntity(GuiWidgetEntity):
         t = pmath.remap(self.timer, self.max_timer, 0, 0, 1)
 
         if self.fade_in:
-            opacity = pmath.lerp(0, 255, t)
+            opacity = int(pmath.lerp(0, 255, t))
         else:
-            opacity = pmath.lerp(255, 0, t)
+            opacity = int(pmath.lerp(255, 0, t))
 
         self.text.opacity = opacity
 

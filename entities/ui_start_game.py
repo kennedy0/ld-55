@@ -14,6 +14,7 @@ class UiStartGame(MainMenuEntity):
         self.row = 0
 
     def update(self) -> None:
+        super().update()
         if self.hovering:
             if Mouse.get_left_mouse_down():
                 self.game_manager.start_game()

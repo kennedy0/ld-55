@@ -81,3 +81,8 @@ class MainScene(Scene):
         # Setup board
         board.move_tiles()
         board.set_neighbors()
+
+    def start(self) -> None:
+        super().start()
+        self.entities.get("GameManager").show_main_menu()
+

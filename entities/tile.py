@@ -46,11 +46,11 @@ class Tile(Entity):
 
         self.reveal_delay = 0
         self.reveal_timer = 0
-        self.reveal_max_time = 2
+        self.reveal_max_time = 1
 
         self.hide_delay = 0
         self.hide_timer = 0
-        self.hide_max_time = 2
+        self.hide_max_time = 1
 
         self.reveal_y_start = 0
         self.reveal_y_offset = 0
@@ -90,9 +90,10 @@ class Tile(Entity):
         return True
 
     def update(self) -> None:
+        self.update_timers()
+
         if self.reveal_started:
             if self.reveal_timer > 0:
-                self.update_timers()
                 self.animate_reveal()
             elif not self.reveal_finished:
                 self.reveal_finished = True
@@ -101,14 +102,13 @@ class Tile(Entity):
                 self.sprite.color = None
                 self.sprite.opacity = 255
                 self.clear_highlight()
+                self.reveal_y_offset = 0
 
         if self.hide_started:
             if self.hide_timer > 0:
-                self.update_timers()
                 self.animate_hide()
             elif not self.hide_finished:
                 self.hide_finished = True
-                self.enabled = False
                 self.visible = False
                 self.board.revealed_tiles -= 1
                 self.sprite.color = None
@@ -120,26 +120,33 @@ class Tile(Entity):
                 self.board.hovered_tile = self
 
     def update_timers(self) -> None:
-        self.reveal_delay -= Time.delta_time
-        if self.reveal_delay <= 0:
-            self.reveal_delay = 0
+        if self.reveal_started:
+            self.reveal_delay -= Time.delta_time
+            if self.reveal_delay <= 0:
+                self.reveal_delay = 0
+                self.visible = True
+                self.reveal_timer -= Time.delta_time
+                if self.reveal_timer <= 0:
+                    self.reveal_timer = 0
 
-        if self.reveal_delay <= 0:
-            self.visible = True
-            self.reveal_timer -= Time.delta_time
-            if self.reveal_timer <= 0:
-                self.reveal_timer = 0
+        if self.hide_started:
+            self.hide_delay -= Time.delta_time
+            if self.hide_delay <= 0:
+                self.hide_delay = 0
+                self.hide_timer -= Time.delta_time
+                if self.hide_timer <= 0:
+                    self.hide_timer = 0
 
     def animate_reveal(self) -> None:
         if self.visible:
-            t = (self.reveal_max_time - self.reveal_timer) / self.reveal_max_time
+            t = pmath.remap(self.reveal_timer, self.reveal_max_time, 0, 0, 1)
             self.sprite.flash_color = Color.white()
             self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
             self.sprite.opacity = int(pmath.lerp(0, 255, t))
             self.reveal_y_offset = int(pmath.lerp(self.reveal_y_start, 0, t))
 
     def animate_hide(self) -> None:
-        t = (self.hide_max_time - self.hide_timer) / self.hide_max_time
+        t = pmath.remap(self.hide_timer, self.hide_max_time, 0, 0, 1)
         self.sprite.flash_color = Color.white()
         self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
         self.sprite.opacity = int(pmath.lerp(255, 0, t))
@@ -160,20 +167,23 @@ class Tile(Entity):
         self.hide_finished = False
         self.reveal_delay = delay
         self.reveal_timer = self.reveal_max_time
-
         self.reveal_y_start = random.randint(20, 90)
         self.reveal_y_offset = self.reveal_y_start
+        self.hide_y_target = 0
+        self.hide_y_offset = 0
 
     def hide(self, delay: float) -> None:
         self.reveal_started = False
         self.reveal_finished = False
         self.hide_started = True
         self.hide_finished = False
-        self.visible = False
+        self.visible = True
         self.enabled = False
         self.hide_delay = delay
         self.hide_timer = self.hide_max_time
         self.hide_y_target = random.randint(20, 90)
+        self.reveal_y_start = 0
+        self.reveal_y_offset = 0
 
     def draw(self, camera: Camera) -> None:
         if self.visible:
