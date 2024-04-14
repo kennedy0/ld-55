@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from entities.blue_player import BluePlayer
     from entities.red_player import RedPlayer
     from entities.board import Board
+    from entities.ui_game_ended import UiGameEnded
+    from entities.main_menu_entity import MainMenuEntity
 
 
 class GameManager(Entity):
@@ -18,10 +20,13 @@ class GameManager(Entity):
 
         # References
         self.board: Board | None = None
-        self.main_menu_entities: list[Entity] = []
+        self.ui_game_ended: UiGameEnded | None = None
+        self.main_menu_entities: list[MainMenuEntity] = []
 
         # Game start
         self.board_setup_finished = False
+        self.board_teardown_started = False
+        self.board_teardown_finished = False
 
         # Current player
         self.current_player: Player | None = None
@@ -33,6 +38,7 @@ class GameManager(Entity):
         self.game_started = False
         self.game_ended = False
         self.turn_ended = False
+        self.score_calculated = False
 
         # Between turns timer
         self.next_turn_delay = 0
@@ -41,6 +47,7 @@ class GameManager(Entity):
 
     def start(self) -> None:
         self.board = self.find("Board")
+        self.ui_game_ended = self.find("UiGameEnded")
         self.blue_player = self.find("BluePlayer")
         self.red_player = self.find("RedPlayer")
 
@@ -49,6 +56,10 @@ class GameManager(Entity):
                 self.main_menu_entities.append(entity)
 
     def update(self) -> None:
+        if self.game_ended:
+            self.update_game_end()
+            return
+
         if not self.game_started:
             return
 
@@ -90,6 +101,8 @@ class GameManager(Entity):
     def start_game(self) -> None:
         self.game_started = True
         self.game_ended = False
+        self.turn_ended = False
+        self.score_calculated = False
         self.hide_main_menu()
 
         # Do board setup
@@ -131,16 +144,13 @@ class GameManager(Entity):
         self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()
 
-    def on_game_end(self) -> None:
-        self.show_main_menu()
+    def show_main_menu(self) -> None:
+        for i, entity in enumerate(self.main_menu_entities):
+            entity.show(delay=i * .5)
 
     def hide_main_menu(self) -> None:
-        for entity in self.main_menu_entities:
-            entity.active = False
-
-    def show_main_menu(self) -> None:
-        for entity in self.main_menu_entities:
-            entity.active = True
+        for i, entity in enumerate(self.main_menu_entities):
+            entity.hide(delay=i * .5)
 
     def check_for_game_end(self) -> None:
         self.board.update_tile_counts()
@@ -153,5 +163,38 @@ class GameManager(Entity):
             self.game_ended = True
 
         if self.game_ended:
-            self.game_started = False
             Log.info("Game Ended!")
+            self.game_started = False
+            self.board_teardown_started = False
+            self.board_teardown_finished = False
+
+    def update_game_end(self) -> None:
+        # Calculate final score
+        if not self.score_calculated:
+            self.score_calculated = True
+            blue_score = self.board.blue_tiles
+            red_score = self.board.red_tiles
+            if blue_score > red_score:
+                self.ui_game_ended.set_blue()
+            elif red_score > blue_score:
+                self.ui_game_ended.set_red()
+            else:
+                self.ui_game_ended.set_draw()
+
+        # Show the winner
+        if self.ui_game_ended.is_animating:
+            return
+
+        # Tear down the board
+        if not self.board_teardown_started:
+            self.board.tear_down()
+        if not self.board_teardown_finished:
+            if self.board.revealed_tiles == 0:
+                self.board_teardown_finished = True
+            return
+
+        # Show the main menu
+        self.show_main_menu()
+
+        # Donezo
+        self.game_ended = False

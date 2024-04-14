@@ -25,6 +25,8 @@ class Tile(Entity):
         self.reveal_finished = False
         self.visible = False
         self.enabled = False
+        self.hide_started = False
+        self.hide_finished = False
 
         self.northwest: Tile | None = None
         self.north: Tile | None = None
@@ -46,8 +48,15 @@ class Tile(Entity):
         self.reveal_timer = 0
         self.reveal_max_time = 2
 
+        self.hide_delay = 0
+        self.hide_timer = 0
+        self.hide_max_time = 2
+
         self.reveal_y_start = 0
         self.reveal_y_offset = 0
+
+        self.hide_y_target = 0
+        self.hide_y_offset = 0
 
         self.debug_text = Text("fonts/NotJamOldStyle11.11.png")
 
@@ -93,6 +102,19 @@ class Tile(Entity):
                 self.sprite.opacity = 255
                 self.clear_highlight()
 
+        if self.hide_started:
+            if self.hide_timer > 0:
+                self.update_timers()
+                self.animate_hide()
+            elif not self.hide_finished:
+                self.hide_finished = True
+                self.enabled = False
+                self.visible = False
+                self.board.revealed_tiles -= 1
+                self.sprite.color = None
+                self.sprite.opacity = 255
+                self.clear_highlight()
+
         if self.enabled:
             if self.mouse_hovering():
                 self.board.hovered_tile = self
@@ -116,6 +138,13 @@ class Tile(Entity):
             self.sprite.opacity = int(pmath.lerp(0, 255, t))
             self.reveal_y_offset = int(pmath.lerp(self.reveal_y_start, 0, t))
 
+    def animate_hide(self) -> None:
+        t = (self.hide_max_time - self.hide_timer) / self.hide_max_time
+        self.sprite.flash_color = Color.white()
+        self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
+        self.sprite.opacity = int(pmath.lerp(255, 0, t))
+        self.hide_y_offset = int(pmath.lerp(0, self.hide_y_target, t))
+
     def set_highlight(self, color: Color) -> None:
         self.sprite.flash_color = color
         self.sprite.flash_opacity = 32
@@ -127,22 +156,29 @@ class Tile(Entity):
     def reveal(self, delay: float) -> None:
         self.reveal_started = True
         self.reveal_finished = False
+        self.hide_started = False
+        self.hide_finished = False
         self.reveal_delay = delay
         self.reveal_timer = self.reveal_max_time
 
         self.reveal_y_start = random.randint(20, 90)
         self.reveal_y_offset = self.reveal_y_start
 
-    def hide(self) -> None:
+    def hide(self, delay: float) -> None:
         self.reveal_started = False
         self.reveal_finished = False
+        self.hide_started = True
+        self.hide_finished = False
         self.visible = False
         self.enabled = False
+        self.hide_delay = delay
+        self.hide_timer = self.hide_max_time
+        self.hide_y_target = random.randint(20, 90)
 
     def draw(self, camera: Camera) -> None:
         if self.visible:
             x = self.x
-            y = self.y + self.reveal_y_offset
+            y = self.y + self.reveal_y_offset + self.hide_y_offset
             self.sprite.draw(camera, Point(x, y))
 
     def debug_draw(self, camera: Camera) -> None:

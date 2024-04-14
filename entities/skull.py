@@ -28,6 +28,8 @@ class Skull(Entity):
         self.convert_neighbor_delay = .1
         self.convert_neighbor_timer = 0
 
+        self.kill_timer = 0
+
     def awake(self) -> None:
         self.sprite.pivot.set_bottom_center()
         self.sprite.play("default")
@@ -65,8 +67,17 @@ class Skull(Entity):
         self.tile.skull = new_skull
         self.destroy()
 
+    def kill(self, delay: float) -> None:
+        self.kill_timer = delay
+        self.tile.skull = None
+        self.tile = None
+
     def update(self) -> None:
         self.update_timers()
+
+        if self.kill_timer <= 0:
+            self.destroy()
+            return
 
         if self.neighbors_to_convert:
             if self.visible:
@@ -81,6 +92,10 @@ class Skull(Entity):
         self.convert_neighbor_timer -= Time.delta_time
         if self.convert_neighbor_timer < 0:
             self.convert_neighbor_timer = 0
+
+        self.kill_timer -= Time.delta_time
+        if self.kill_timer < 0:
+            self.kill_timer = 0
 
     def convert_neighbor(self, direction: str, neighbor: Skull) -> None:
         blast = ConvertBlast.create(self, direction)

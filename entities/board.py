@@ -95,7 +95,22 @@ class Board(Entity):
         random.shuffle(self.new_game_tiles)
         for i, tile in enumerate(self.new_game_tiles):
             self.enabled_tiles += 1
-            tile.reveal(i * .05)
+            tile.reveal(delay=i * .05)
+
+    def tear_down(self) -> None:
+        self.total_tiles = 0
+        self.enabled_tiles = 0
+        self.free_tiles = 0
+        self.blue_tiles = 0
+        self.red_tiles = 0
+        self.new_game_tiles.clear()
+        self.valid_blue_tiles.clear()
+        self.valid_red_tiles.clear()
+
+        for i, tile in enumerate(self.iter_tiles()):
+            if skull := tile.skull:
+                skull.kill(delay=i * .05)
+            tile.hide(delay=.5 + (i * .05))
 
     def iter_tiles(self) -> Iterator[Tile]:
         """ Iterate over all tiles. """

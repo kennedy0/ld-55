@@ -24,12 +24,26 @@ class MainMenuEntity(GuiWidgetEntity):
         self.normal_color = Color(169, 188, 191)
         self.hover_color = Color(230, 238, 237)
 
+        self.is_animating = False
+
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.x = 160 - self.text.width / 2
         self.y = 0
 
+    def show(self, delay: float) -> None:
+        self.active = True
+        self.is_animating = True
+        self.hovering = False
+
+    def hide(self, delay: float) -> None:
+        self.active = False
+        self.is_animating = True
+        self.hovering = False
+
     def on_mouse_enter(self) -> None:
+        if self.is_animating:
+            return
         self.hovering = True
 
     def on_mouse_exit(self) -> None:
