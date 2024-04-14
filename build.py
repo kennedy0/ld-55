@@ -12,7 +12,7 @@ builds = project_root / "builds"
 
 app_name = "LD55"
 script_file = project_root / "main.py"
-content_root = project_root / "game" / "content"
+content_root = project_root / "content"
 
 debug_app_info = AppInfo(
     name=f"{app_name}-debug",
