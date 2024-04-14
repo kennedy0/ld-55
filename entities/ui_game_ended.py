@@ -19,6 +19,15 @@ class UiGameEnded(Entity):
         self.x = 160
         self.y = 90
 
+    def set_tutorial(self) -> None:
+        self.text.text = "Tutorial\nCancelled"
+        self.text.color = Color(169, 188, 191)
+        self.text.align_vertical_center()
+        self.text.align_horizontal_center()
+        self.timer = 0
+        self.is_animating = True
+        self.active = True
+
     def set_draw(self) -> None:
         self.text.text = "Draw"
         self.text.color = Color(169, 188, 191)

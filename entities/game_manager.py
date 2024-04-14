@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from entities.board import Board
     from entities.ui_game_ended import UiGameEnded
     from entities.main_menu_entity import MainMenuEntity
+    from entities.ui_tutorial_text import UiTutorialText
 
 
 class GameManager(Entity):
@@ -23,6 +24,7 @@ class GameManager(Entity):
         # References
         self.board: Board | None = None
         self.ui_game_ended: UiGameEnded | None = None
+        self.tutorial_text: UiTutorialText | None = None
         self.main_menu_entities: list[MainMenuEntity] = []
         self.game_ui_entities: list[Entity] = []
 
@@ -54,10 +56,14 @@ class GameManager(Entity):
 
         # Tutorial
         self.is_tutorial = False
+        self.tutorial_step = 0
+        self.tutorial_step_started = False
+        self.tutorial_delay_timer = 0
 
     def start(self) -> None:
         self.board = self.find("Board")
         self.ui_game_ended = self.find("UiGameEnded")
+        self.tutorial_text = self.find("UiTutorialText")
         self.blue_player = self.find("BluePlayer")
         self.red_player = self.find("RedPlayer")
 
@@ -120,15 +126,24 @@ class GameManager(Entity):
                 if not self.game_ended:
                     self.on_turn_start()
 
+        if self.is_tutorial:
+            self.update_tutorial()
+
     def update_timers(self) -> None:
         self.turn_end_timer -= Time.delta_time
         if self.turn_end_timer < 0:
             self.turn_end_timer = 0
 
+        self.tutorial_delay_timer -= Time.delta_time
+        if self.tutorial_delay_timer < 0:
+            self.tutorial_delay_timer = 0
+
     def start_game(self) -> None:
         Log.info("Start Game!")
         if self.is_tutorial:
             Log.info("Tutorial mode")
+            self.tutorial_step = 0
+            self.tutorial_step_started = True
 
         self.game_started = True
         self.game_ended = False
@@ -185,7 +200,6 @@ class GameManager(Entity):
     def show_game_ui(self) -> None:
         for entity in self.game_ui_entities:
             entity.active = True
-            entity.active = False
 
         if self.is_tutorial:
             self.find("UiScore").active = False
@@ -235,7 +249,9 @@ class GameManager(Entity):
             self.score_calculated = True
             blue_score = self.board.blue_tiles
             red_score = self.board.red_tiles
-            if blue_score > red_score:
+            if self.is_tutorial:
+                self.ui_game_ended.set_tutorial()
+            elif blue_score > red_score:
                 self.ui_game_ended.set_blue()
             elif red_score > blue_score:
                 self.ui_game_ended.set_red()
@@ -264,3 +280,31 @@ class GameManager(Entity):
         # Show the main menu
         Log.info("Show Main Menu")
         self.show_main_menu()
+
+    def update_tutorial(self) -> None:
+        # Click to Summon
+        if self.tutorial_step == 0:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("Click to summon")
+            else:
+                # Conditions to proceed
+                if self.current_player == self.red_player:
+                    self.next_tutorial_step()
+
+        # Opponent
+        if self.tutorial_step == 1:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("I summon next")
+            else:
+                # Conditions to proceed
+                if self.current_player == self.blue_player:
+                    self.next_tutorial_step()
+
+    def next_tutorial_step(self) -> None:
+        self.tutorial_step += 1
+        self.tutorial_step_started = True
+
+    def tutorial_delay(self, delay: float) -> None:
+        self.tutorial_delay_timer = delay
