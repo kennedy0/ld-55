@@ -16,7 +16,7 @@ fonts_dst.mkdir(parents=True, exist_ok=True)
 font_sizes = (16, 32)
 
 generate_bitmap_font(fonts_src / "NotJamOldStyle11.ttf", fonts_dst, 11)
-generate_bitmap_font(fonts_src / "antiquity-print.ttf", fonts_dst, 16)
+generate_bitmap_font(fonts_src / "antiquity-print.ttf", fonts_dst, 13)
 
 # Atlas
 packer = SpritePacker()

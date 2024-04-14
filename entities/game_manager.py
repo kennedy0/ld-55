@@ -15,14 +15,21 @@ class GameManager(Entity):
     def __init__(self) -> None:
         super().__init__()
         self.name = "GameManager"
+
+        # References
         self.board: Board | None = None
+        self.main_menu_entities: list[Entity] = []
+
+        # Current player
         self.current_player: Player | None = None
         self.next_player: Player | None = None
         self.blue_player: BluePlayer | None = None
         self.red_player: RedPlayer | None = None
 
+        # Turn tracking
         self.turn_ended = False
 
+        # Between turns timer
         self.next_turn_delay = 0
         self.time_between_turns = .2
         self.turn_end_timer = 0
@@ -31,6 +38,10 @@ class GameManager(Entity):
         self.board = self.find("Board")
         self.blue_player = self.find("BluePlayer")
         self.red_player = self.find("RedPlayer")
+
+        for entity in self.scene.entities:
+            if "MainMenu" in entity.tags:
+                self.main_menu_entities.append(entity)
 
     def update(self) -> None:
         self.update_timers()
@@ -50,11 +61,14 @@ class GameManager(Entity):
         if self.turn_end_timer < 0:
             self.turn_end_timer = 0
 
-    def end_blue_turn(self) -> None:
-        self.current_player = self.red_player
+    def start_game(self) -> None:
+        self.on_game_start()
 
-    def end_red_turn(self) -> None:
-        self.current_player = self.blue_player
+    def on_game_start(self) -> None:
+        self.hide_main_menu()
+
+        # Set first player
+        self.next_player = self.blue_player
 
     def on_turn_ended(self) -> None:
         # Start in-between-turns timer
@@ -80,3 +94,14 @@ class GameManager(Entity):
         # Board Updates
         self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()
+
+    def on_game_end(self) -> None:
+        self.show_main_menu()
+
+    def hide_main_menu(self) -> None:
+        for entity in self.main_menu_entities:
+            entity.active = False
+
+    def show_main_menu(self) -> None:
+        for entity in self.main_menu_entities:
+            entity.active = True

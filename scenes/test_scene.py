@@ -8,6 +8,7 @@ from entities.red_player import RedPlayer
 from entities.summon_circle import SummonCircle
 from entities.tile import Tile
 from entities.ui_score import UiScore
+from entities.ui_start_game import UiStartGame
 
 
 class TestScene(Scene):
@@ -42,10 +43,11 @@ class TestScene(Scene):
         self.entities.add(red_player)
 
         # UI
+        self.build_main_menu()
         self.entities.add(UiScore())
 
         # ToDo: TESTING
-        game_manager.next_player = blue_player
+        # game_manager.next_player = blue_player
 
     def generate_board(self, radius: int) -> None:
         # Create board
@@ -74,3 +76,6 @@ class TestScene(Scene):
         # Setup board
         board.move_tiles()
         board.set_neighbors()
+
+    def build_main_menu(self) -> None:
+        self.entities.add(UiStartGame())
