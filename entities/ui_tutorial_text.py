@@ -64,7 +64,6 @@ class UiTutorialText(Entity):
                 self.fading_in = False
                 opacity = 255
             opacity = int(opacity)
-            print(opacity)
             self.text.opacity = opacity
 
     def show_text(self, text: str) -> None:
