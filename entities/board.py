@@ -38,6 +38,9 @@ class Board(Entity):
             (3, -3, 0),
         ]
 
+        self.valid_blue_tiles = []
+        self.valid_red_tiles = []
+
         self.game_manager: GameManager | None = None
 
     def start(self) -> None:
@@ -105,9 +108,13 @@ class Board(Entity):
                     tile.set_highlight(color)
 
     def update_valid_tiles_for_summoning(self) -> None:
+        self.valid_blue_tiles.clear()
+        self.valid_red_tiles.clear()
+
         for tile in self.iter_tiles():
             tile.blue_can_summon = False
             tile.red_can_summon = False
+
             if not tile.skull:
                 if tile.coordinates in self.blue_start_positions:
                     tile.blue_can_summon = True
@@ -119,6 +126,11 @@ class Board(Entity):
                             tile.blue_can_summon = True
                         if s.team == "red":
                             tile.red_can_summon = True
+
+                if tile.blue_can_summon:
+                    self.valid_blue_tiles.append(tile)
+                if tile.red_can_summon:
+                    self.valid_red_tiles.append(tile)
 
     @staticmethod
     def tile_to_world_position(q: int, r: int, s: int) -> Point:

@@ -72,6 +72,8 @@ class Tile(Entity):
         if self.mouse_hovering():
             self.position().draw(camera, Color.white())
             self.debug_text.text = self.coordinates
-            self.debug_text.draw(camera, self.position() + Point(8, 8))
+            bg = Color(0, 0, 0, 128)
+            Rect(self.x, self.y, self.debug_text.width + 4, self.debug_text.height + 4).draw(camera, bg, solid=True)
+            self.debug_text.draw(camera, self.position() + Point(2, 2))
         else:
             self.position().draw(camera, Color.gray())
