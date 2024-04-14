@@ -26,6 +26,32 @@ class Skull(Entity):
         self.neighbors_to_convert: list[tuple[str, Skull]] = []
         self.convert_neighbor_delay = .1
         self.convert_neighbor_timer = 0
+        self.summoned_by_player = False
+
+        self.summon_sfx: list[SoundEffect] = [
+            SoundEffect("sfx/summon1.wav"),
+            SoundEffect("sfx/summon2.wav"),
+            SoundEffect("sfx/summon3.wav"),
+            SoundEffect("sfx/summon4.wav"),
+            SoundEffect("sfx/summon5.wav"),
+            SoundEffect("sfx/summon6.wav"),
+            SoundEffect("sfx/summon7.wav"),
+        ]
+
+        self.explosion_sfx: list[SoundEffect] = [
+            SoundEffect("sfx/explosion1.wav"),
+            SoundEffect("sfx/explosion2.wav"),
+            SoundEffect("sfx/explosion3.wav"),
+            SoundEffect("sfx/explosion4.wav"),
+        ]
+
+        self.shoot_sfx: list[SoundEffect] = [
+            SoundEffect("sfx/shoot1.wav"),
+            SoundEffect("sfx/shoot2.wav"),
+            SoundEffect("sfx/shoot3.wav"),
+            SoundEffect("sfx/shoot4.wav"),
+            SoundEffect("sfx/shoot5.wav"),
+        ]
 
         self.is_killed = False
         self.kill_timer = 0
@@ -44,6 +70,10 @@ class Skull(Entity):
 
         summon_fx = SummonFx.create(self)
 
+        if self.summoned_by_player:
+            sfx = random.choice(self.summon_sfx)
+            sfx.play()
+
     def get_neighboring_opponents(self) -> None:
         for direction, tile in self.tile.neighbors.items():
             if skull := tile.skull:
@@ -54,6 +84,9 @@ class Skull(Entity):
     def convert(self) -> None:
         from entities.blue_skull import BlueSkull
         from entities.red_skull import RedSkull
+
+        sfx = random.choice(self.explosion_sfx)
+        sfx.play()
 
         if self.team == "blue":
             new_skull = RedSkull()
@@ -102,6 +135,8 @@ class Skull(Entity):
     def convert_neighbor(self, direction: str, neighbor: Skull) -> None:
         blast = ConvertBlast.create(self, direction)
         blast.target = neighbor
+        sfx = random.choice(self.shoot_sfx)
+        sfx.play()
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())

@@ -147,6 +147,8 @@ class GameManager(Entity):
             Log.info("Tutorial mode")
             self.tutorial_step = 0
             self.tutorial_step_started = True
+            self.tutorial_game_end_message = "Tutorial\nComplete"
+            self.tutorial_text.text.text = ""
 
         self.game_started = True
         self.game_ended = False
@@ -285,9 +287,6 @@ class GameManager(Entity):
         self.show_main_menu()
 
     def update_tutorial(self) -> None:
-        self.tutorial_game_end_message = "Tutorial\nComplete"
-        self.tutorial_text.text = ""
-
         if self.tutorial_step == 0:
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
