@@ -77,22 +77,24 @@ class GameManager(Entity):
 
         self.update_timers()
 
-        # Forfeit
-        if Keyboard.get_key(sdl2.SDLK_ESCAPE):
-            self.forfeit_timer += Time.delta_time
-            if self.forfeit_timer > self.forfeit_max_time:
-                Log.info("Forfeit")
-                self.turn_ended = True
-                self.game_ended = True
-        else:
-            self.forfeit_timer = 0
-
         # Board setup
         if not self.board_setup_finished:
             if self.board.revealed_tiles == self.board.enabled_tiles:
                 self.board_setup_finished = True
                 self.on_board_setup_finished()
             return
+
+        # Forfeit
+        if Keyboard.get_key(sdl2.SDLK_ESCAPE):
+            self.forfeit_timer += Time.delta_time
+            if self.forfeit_timer > self.forfeit_max_time:
+                Log.info("Forfeited")
+                self.forfeit_timer = 0
+                self.game_ended = True
+                self.check_for_game_end()
+                return
+        else:
+            self.forfeit_timer = 0
 
         # Check for no valid turns for current player - skip turn
         if not self.turn_ended:
@@ -189,8 +191,10 @@ class GameManager(Entity):
             entity.hide(delay=i * .5)
 
     def check_for_game_end(self) -> None:
+        # Force an update of the tile counts
         self.board.update_tile_counts()
 
+        # Check end conditions
         if self.board.free_tiles == 0:
             Log.info("No more free tiles")
             self.game_ended = True
@@ -198,15 +202,18 @@ class GameManager(Entity):
             Log.info("No more valid tiles for either player")
             self.game_ended = True
 
+        # Reset variables
         if self.game_ended:
             Log.info("Game Ended!")
+            self.game_started = False
             self.board_setup_finished = False
             self.board_teardown_started = False
             self.board_teardown_finished = False
+            self.score_calculated = False
+            self.current_player = None
+            self.next_player = None
 
     def update_game_end(self) -> None:
-        self.game_started = False
-
         # Calculate final score
         if not self.score_calculated:
             self.score_calculated = True

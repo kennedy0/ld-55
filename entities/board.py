@@ -116,7 +116,10 @@ class Board(Entity):
         self.valid_blue_tiles.clear()
         self.valid_red_tiles.clear()
 
-        for i, tile in enumerate(self.iter_tiles()):
+        tiles = list(self.iter_tiles())
+        random.shuffle(tiles)
+
+        for i, tile in enumerate(tiles):
             if skull := tile.skull:
                 skull.kill(delay=i * .05)
             tile.hide(delay=.5 + (i * .05))

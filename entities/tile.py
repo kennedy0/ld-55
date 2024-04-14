@@ -147,8 +147,6 @@ class Tile(Entity):
 
     def animate_hide(self) -> None:
         t = pmath.remap(self.hide_timer, self.hide_max_time, 0, 0, 1)
-        self.sprite.flash_color = Color.white()
-        self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
         self.sprite.opacity = int(pmath.lerp(255, 0, t))
         self.hide_y_offset = int(pmath.lerp(0, self.hide_y_target, t))
 
