@@ -113,6 +113,7 @@ class Tile(Entity):
             t = (self.reveal_max_time - self.reveal_timer) / self.reveal_max_time
             self.sprite.flash_color = Color.white()
             self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
+            self.sprite.opacity = int(pmath.lerp(0, 255, t))
             self.reveal_y_offset = int(pmath.lerp(self.reveal_y_start, 0, t))
 
     def set_highlight(self, color: Color) -> None:
@@ -129,7 +130,7 @@ class Tile(Entity):
         self.reveal_delay = delay
         self.reveal_timer = self.reveal_max_time
 
-        self.reveal_y_start = random.randint(-100, 100)
+        self.reveal_y_start = random.randint(20, 90)
         self.reveal_y_offset = self.reveal_y_start
 
     def hide(self) -> None:

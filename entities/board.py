@@ -19,14 +19,23 @@ class Board(Entity):
     def __init__(self) -> None:
         super().__init__()
         self.name = "Board"
+        self.game_manager: GameManager | None = None
+
         self.radius = 0
         self.tiles = {}
         self.hovered_tile: Tile | None = None
 
-        self.total_tiles = 0
-        self.free_tiles = 0
-        self.red_tiles = 0
-        self.blue_tiles = 0
+        self.total_tiles = 0     # Number of tiles in play
+        self.enabled_tiles = 0   # Number of tiles that have been enabled
+        self.revealed_tiles = 0  # Tiles that have been revealed during the board setup
+        self.free_tiles = 0      # Empty tiles that can be played on
+        self.blue_tiles = 0      # Tiles claimed by blue
+        self.red_tiles = 0       # Tiles claimed by red
+
+        self.new_game_tiles = []  # List of tiles to include when setting up a new game
+
+        self.valid_blue_tiles = []  # List of tiles that are valid summon targets for blue
+        self.valid_red_tiles = []   # List of tiles that are valid summon targets for red
 
         self.blue_start_coordinates = [
             (-3, 3, 0),
@@ -39,21 +48,11 @@ class Board(Entity):
             (3, -3, 0),
         ]
 
-        self.valid_blue_tiles = []
-        self.valid_red_tiles = []
-
-        self.revealed_tiles = 0
-        self.tiles_in_play = 0
-
-        self.game_manager: GameManager | None = None
-
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
 
     def add_tile(self, tile: Tile) -> None:
         self.tiles[tile.coordinates] = tile
-        self.total_tiles += 1
-        self.free_tiles += 1
 
     def set_neighbors(self) -> None:
         for tile in self.iter_tiles():
@@ -83,15 +82,19 @@ class Board(Entity):
             tile.set_position(self.tile_to_world_position(tile.q, tile.r, tile.s))
             tile.z_depth = -tile.y + 100
 
+    def setup_board_for_new_game(self) -> None:
+        self.new_game_tiles.clear()
+        for tile in self.iter_tiles():
+            self.new_game_tiles.append(tile)
+
+        self.total_tiles = len(self.new_game_tiles)
+
     def reveal_tiles(self) -> None:
         self.revealed_tiles = 0
-        self.tiles_in_play = 0
-
-        tiles = list(self.iter_tiles())
-        random.shuffle(tiles)
-
-        for i, tile in enumerate(tiles):
-            self.tiles_in_play += 1
+        self.enabled_tiles = 0
+        random.shuffle(self.new_game_tiles)
+        for i, tile in enumerate(self.new_game_tiles):
+            self.enabled_tiles += 1
             tile.reveal(i * .05)
 
     def iter_tiles(self) -> Iterator[Tile]:
@@ -147,6 +150,19 @@ class Board(Entity):
                     self.valid_blue_tiles.append(tile)
                 if tile.red_can_summon:
                     self.valid_red_tiles.append(tile)
+
+    def update_tile_counts(self) -> None:
+        self.free_tiles = 0
+        self.blue_tiles = 0
+        self.red_tiles = 0
+        for tile in self.iter_tiles():
+            if tile.is_free():
+                self.free_tiles += 1
+            if skull := tile.skull:
+                if skull.team == "blue":
+                    self.blue_tiles += 1
+                if skull.team == "red":
+                    self.red_tiles += 1
 
     @staticmethod
     def tile_to_world_position(q: int, r: int, s: int) -> Point:

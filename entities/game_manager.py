@@ -29,12 +29,14 @@ class GameManager(Entity):
         self.blue_player: BluePlayer | None = None
         self.red_player: RedPlayer | None = None
 
-        # Turn tracking
+        # Game state
+        self.game_started = False
+        self.game_ended = False
         self.turn_ended = False
 
         # Between turns timer
         self.next_turn_delay = 0
-        self.time_between_turns = .2
+        self.time_between_turns = .3
         self.turn_end_timer = 0
 
     def start(self) -> None:
@@ -47,13 +49,24 @@ class GameManager(Entity):
                 self.main_menu_entities.append(entity)
 
     def update(self) -> None:
+        if not self.game_started:
+            return
+
         self.update_timers()
 
         # Board setup
         if not self.board_setup_finished:
-            if self.board.revealed_tiles == self.board.tiles_in_play:
+            if self.board.revealed_tiles == self.board.enabled_tiles:
                 self.board_setup_finished = True
                 self.on_board_setup_finished()
+            return
+
+        # Check for no valid turns for current player - skip turn
+        if not self.turn_ended:
+            if self.current_player == self.blue_player and len(self.board.valid_blue_tiles) == 0:
+                self.turn_ended = True
+            elif self.current_player == self.red_player and len(self.board.valid_red_tiles) == 0:
+                self.turn_ended = True
 
         # End Turn
         if self.turn_ended:
@@ -63,7 +76,9 @@ class GameManager(Entity):
         # Start Turn
         if not self.current_player:
             if self.turn_end_timer <= 0:
-                self.on_turn_start()
+                self.check_for_game_end()
+                if not self.game_ended:
+                    self.on_turn_start()
 
     def update_timers(self) -> None:
         self.turn_end_timer -= Time.delta_time
@@ -71,14 +86,18 @@ class GameManager(Entity):
             self.turn_end_timer = 0
 
     def start_game(self) -> None:
+        self.game_started = True
+        self.game_ended = False
         self.hide_main_menu()
 
         # Do board setup
         self.board_setup_finished = False
+        self.board.setup_board_for_new_game()
         self.board.reveal_tiles()
 
     def on_board_setup_finished(self) -> None:
         # Board updates
+        self.board.update_tile_counts()
         self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()
 
@@ -120,3 +139,15 @@ class GameManager(Entity):
     def show_main_menu(self) -> None:
         for entity in self.main_menu_entities:
             entity.active = True
+
+    def check_for_game_end(self) -> None:
+        self.board.update_tile_counts()
+
+        if self.board.free_tiles == 0:
+            self.game_ended = True
+        if len(self.board.valid_blue_tiles) + len(self.board.valid_red_tiles) == 0:
+            self.game_ended = True
+
+        if self.game_ended:
+            self.game_started = False
+            Log.info("Game Ended!")

@@ -49,14 +49,20 @@ class UiScore(Entity):
             self.update_red()
 
     def update_blue(self) -> None:
-        p = self.board.blue_tiles / self.board.total_tiles
-        w = int(pmath.lerp(0, self.width, p))
-        self.blue_rect = Rect(self.left, self.top, w, self.height)
+        if not self.board.total_tiles:
+            self.blue_rect = Rect.empty()
+        else:
+            p = self.board.blue_tiles / self.board.total_tiles
+            w = int(pmath.lerp(0, self.width, p))
+            self.blue_rect = Rect(self.left, self.top, w, self.height)
 
     def update_red(self) -> None:
-        p = self.board.red_tiles / self.board.total_tiles
-        w = int(pmath.lerp(0, self.width, p))
-        self.red_rect = Rect(self.right - w, self.top, w, self.height)
+        if not self.board.total_tiles:
+            self.red_rect = Rect.empty()
+        else:
+            p = self.board.red_tiles / self.board.total_tiles
+            w = int(pmath.lerp(0, self.width, p))
+            self.red_rect = Rect(self.right - w, self.top, w, self.height)
 
     def draw(self, camera: Camera) -> None:
         self.back.draw(camera, self.position())
