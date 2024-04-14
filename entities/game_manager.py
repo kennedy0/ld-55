@@ -121,6 +121,7 @@ class GameManager(Entity):
             self.turn_end_timer = 0
 
     def start_game(self) -> None:
+        Log.info("Start Game!")
         self.game_started = True
         self.game_ended = False
         self.turn_ended = False
@@ -199,12 +200,13 @@ class GameManager(Entity):
 
         if self.game_ended:
             Log.info("Game Ended!")
-            self.game_started = False
             self.board_setup_finished = False
             self.board_teardown_started = False
             self.board_teardown_finished = False
 
     def update_game_end(self) -> None:
+        self.game_started = False
+
         # Calculate final score
         if not self.score_calculated:
             self.score_calculated = True
@@ -224,15 +226,18 @@ class GameManager(Entity):
 
         # Tear down the board
         if not self.board_teardown_started:
+            Log.info("Tearing down board")
             self.board_teardown_started = True
             self.board.tear_down()
         if not self.board_teardown_finished:
             if self.board.revealed_tiles == 0:
+                Log.info("Board teardown finished")
                 self.board_teardown_finished = True
             return
 
-        # Show the main menu
-        self.show_main_menu()
-
         # Donezo
         self.game_ended = False
+
+        # Show the main menu
+        Log.info("Show Main Menu")
+        self.show_main_menu()
