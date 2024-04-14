@@ -52,6 +52,9 @@ class GameManager(Entity):
         self.forfeit_timer = 0
         self.forfeit_max_time = 1
 
+        # Tutorial
+        self.is_tutorial = False
+
     def start(self) -> None:
         self.board = self.find("Board")
         self.ui_game_ended = self.find("UiGameEnded")
@@ -128,12 +131,18 @@ class GameManager(Entity):
         self.game_ended = False
         self.turn_ended = False
         self.score_calculated = False
+        self.is_tutorial = False
         self.hide_main_menu()
 
         # Do board setup
         self.board_setup_finished = False
         self.board.setup_board_for_new_game()
         self.board.reveal_tiles()
+
+    def start_tutorial(self) -> None:
+        Log.info("Tutorial mode")
+        self.is_tutorial = True
+        self.start_game()
 
     def on_board_setup_finished(self) -> None:
         Log.info("Board setup finished")
@@ -179,10 +188,18 @@ class GameManager(Entity):
     def show_game_ui(self) -> None:
         for entity in self.game_ui_entities:
             entity.active = True
+            entity.active = False
+
+        if self.is_tutorial:
+            self.find("UiScore").active = False
+            self.find("UiTutorialText").active = True
 
     def hide_game_ui(self) -> None:
         for entity in self.game_ui_entities:
             entity.active = False
+
+        if self.is_tutorial:
+            self.find("UiTutorialText").active = False
 
     def show_main_menu(self) -> None:
         for i, entity in enumerate(self.main_menu_entities):

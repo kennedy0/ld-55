@@ -48,6 +48,13 @@ class Board(Entity):
             (3, -3, 0),
         ]
 
+        self.tutorial_blue_start_coordinates = [
+
+        ]
+        self.tutorial_red_start_coordinates = [
+
+        ]
+
         self.missing_tile_coordinates = [
             [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
             [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],

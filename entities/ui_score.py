@@ -7,6 +7,7 @@ from entities.game_manager import GameManager
 class UiScore(Entity):
     def __init__(self) -> None:
         super().__init__()
+        self.name = "UiScore"
         self.tags.add("UI")
         self.tags.add("GameUI")
         self.game_manager: GameManager | None = None

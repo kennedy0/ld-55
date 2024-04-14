@@ -7,8 +7,10 @@ from entities.game_manager import GameManager
 from entities.red_player import RedPlayer
 from entities.summon_circle import SummonCircle
 from entities.tile import Tile
+
 from entities.ui_score import UiScore
 from entities.ui_game_ended import UiGameEnded
+from entities.ui_tutorial_text import UiTutorialText
 
 from entities.ui_tutorial import UiTutorial
 from entities.ui_1p import Ui1p
@@ -49,6 +51,7 @@ class MainScene(Scene):
 
         # UI
         self.entities.add(UiScore())
+        self.entities.add(UiTutorialText())
 
         # Main Menu
         self.entities.add(UiTutorial())
@@ -90,4 +93,3 @@ class MainScene(Scene):
     def start(self) -> None:
         super().start()
         self.entities.get("GameManager").show_main_menu()
-
