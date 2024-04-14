@@ -1,3 +1,5 @@
+import random
+
 from engine import *
 
 from entities.board import Board
@@ -14,9 +16,19 @@ class Player(Entity):
         self.board: Board | None = None
         self.team = ""
         self.controller = "human"
-        self.focus = Point.zero()
 
         self.tile_highlight_color = Color.gray()
+
+        # Computer AI
+        self.thinking_timer = 0
+        self.thinking_timer_max = 1
+
+        self.focus = Point.zero()
+        self.possible_tiles = []
+        self.target_tile: Tile | None = None
+
+        self.has_focused_tile = False
+        self.has_summoned = False
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -25,9 +37,29 @@ class Player(Entity):
     def is_my_turn(self) -> bool:
         return self.game_manager.current_player == self
 
+    def on_turn_start(self) -> None:
+        if self.controller == "computer":
+            # Reset
+            self.thinking_timer = self.thinking_timer_max
+            self.focus = Point.zero()
+            self.target_tile = None
+            self.possible_tiles.clear()
+            self.has_focused_tile = False
+            self.has_summoned = False
+
+            # Get list of possible moves
+            for tile in self.board.valid_red_tiles:
+                self.possible_tiles.append(tile)
+
+            # Pick a move
+            if self.possible_tiles:
+                self.target_tile = random.choice(self.possible_tiles)
+
     def update(self) -> None:
         if not self.is_my_turn():
             return
+
+        self.update_timers()
 
         if self.controller == "computer":
             self.update_computer_input()
@@ -36,6 +68,11 @@ class Player(Entity):
         else:
             self.focus = Mouse.world_position()
             self.update_human_input()
+
+    def update_timers(self) -> None:
+        self.thinking_timer -= Time.delta_time
+        if self.thinking_timer <= 0:
+            self.thinking_timer = 0
 
     def can_summon_on_tile(self, tile: Tile) -> bool:
         if self.team == "blue" and tile.blue_can_summon:
@@ -75,7 +112,24 @@ class Player(Entity):
                         self.end_turn()
 
     def update_computer_input(self) -> None:
-        pass
+        # Delay when thinking
+        if self.thinking_timer > 0:
+            return
+
+        # Set focus point on target tile so human player knows what the computer is thinking
+        if not self.has_focused_tile:
+            self.has_focused_tile = True
+            self.thinking_timer = self.thinking_timer_max
+            if self.target_tile:
+                self.focus = self.target_tile.position()
+            return
+
+        # Make move
+        if not self.has_summoned:
+            self.has_summoned = True
+            if self.target_tile:
+                self.summon_skull(self.target_tile)
+            self.end_turn()
 
     def update_tutorial_input(self) -> None:
         pass

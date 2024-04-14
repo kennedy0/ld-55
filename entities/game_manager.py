@@ -174,6 +174,8 @@ class GameManager(Entity):
         self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()
 
+        self.current_player.on_turn_start()
+
     def show_game_ui(self) -> None:
         for entity in self.game_ui_entities:
             entity.active = True
