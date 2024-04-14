@@ -16,6 +16,7 @@ from entities.ui_tutorial import UiTutorial
 from entities.ui_1p import Ui1p
 from entities.ui_2p import Ui2p
 from entities.ui_quit_game import UiQuitGame
+from entities.ui_sound import UiSound
 
 
 class MainScene(Scene):
@@ -58,6 +59,7 @@ class MainScene(Scene):
         self.entities.add(Ui1p())
         self.entities.add(Ui2p())
         self.entities.add(UiQuitGame())
+        self.entities.add(UiSound())
 
         # End Game
         self.entities.add(UiGameEnded())
