@@ -74,4 +74,3 @@ class TestScene(Scene):
         # Setup board
         board.move_tiles()
         board.set_neighbors()
-        board.set_initial_summon_tiles()

@@ -27,6 +27,17 @@ class Board(Entity):
         self.red_tiles = 0
         self.blue_tiles = 0
 
+        self.blue_start_positions = [
+            (-3, 3, 0),
+            (3, 0, -3),
+            (0, -3, 3),
+        ]
+        self.red_start_positions = [
+            (0, 3, -3),
+            (-3, 0, 3),
+            (3, -3, 0),
+        ]
+
         self.game_manager: GameManager | None = None
 
     def start(self) -> None:
@@ -59,15 +70,6 @@ class Board(Entity):
             if southeast := self.get_tile(q+1, r-1, s):
                 tile.northwest = southeast
                 tile.neighbors['se'] = southeast
-
-    def set_initial_summon_tiles(self) -> None:
-        self.get_tile(-3, 3, 0).blue_can_summon = True
-        self.get_tile(3, 0, -3).blue_can_summon = True
-        self.get_tile(0, -3, 3).blue_can_summon = True
-
-        self.get_tile(0, 3, -3).red_can_summon = True
-        self.get_tile(-3, 0, 3).red_can_summon = True
-        self.get_tile(3, -3, 0).red_can_summon = True
 
     def move_tiles(self) -> None:
         for tile in self.iter_tiles():
@@ -104,10 +106,13 @@ class Board(Entity):
 
     def update_valid_tiles_for_summoning(self) -> None:
         for tile in self.iter_tiles():
-            if tile.skull:
-                tile.blue_can_summon = False
-                tile.red_can_summon = False
-            else:
+            tile.blue_can_summon = False
+            tile.red_can_summon = False
+            if not tile.skull:
+                if tile.coordinates in self.blue_start_positions:
+                    tile.blue_can_summon = True
+                if tile.coordinates in self.red_start_positions:
+                    tile.red_can_summon = True
                 for n in tile.neighbors.values():
                     if s := n.skull:
                         if s.team == "blue":
