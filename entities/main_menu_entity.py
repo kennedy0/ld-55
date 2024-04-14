@@ -31,10 +31,12 @@ class MainMenuEntity(GuiWidgetEntity):
         self.timer = 0
         self.max_timer = 1
 
+        self.row = 0
+
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.x = 160 - self.text.width / 2
-        self.y = 0
+        self.y = 90 + (self.row * 20)
 
     def show(self, delay: float) -> None:
         self.fade_in = True

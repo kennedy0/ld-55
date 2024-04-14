@@ -10,6 +10,7 @@ from entities.tile import Tile
 from entities.ui_score import UiScore
 from entities.ui_game_ended import UiGameEnded
 from entities.ui_start_game import UiStartGame
+from entities.ui_quit_game import UiQuitGame
 
 
 class MainScene(Scene):
@@ -48,6 +49,7 @@ class MainScene(Scene):
 
         # Main Menu
         self.entities.add(UiStartGame())
+        self.entities.add(UiQuitGame())
 
         # End Game
         self.entities.add(UiGameEnded())

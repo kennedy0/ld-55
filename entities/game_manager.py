@@ -22,6 +22,7 @@ class GameManager(Entity):
         self.board: Board | None = None
         self.ui_game_ended: UiGameEnded | None = None
         self.main_menu_entities: list[MainMenuEntity] = []
+        self.game_ui_entities: list[Entity] = []
 
         # Game start
         self.board_setup_finished = False
@@ -54,6 +55,10 @@ class GameManager(Entity):
         for entity in self.scene.entities:
             if "MainMenu" in entity.tags:
                 self.main_menu_entities.append(entity)
+            if "GameUI" in entity.tags:
+                self.game_ui_entities.append(entity)
+
+        self.hide_game_ui()
 
     def update(self) -> None:
         if self.game_ended:
@@ -111,6 +116,9 @@ class GameManager(Entity):
         self.board.reveal_tiles()
 
     def on_board_setup_finished(self) -> None:
+        # UI
+        self.show_game_ui()
+
         # Board updates
         self.board.update_tile_counts()
         self.board.update_valid_tiles_for_summoning()
@@ -143,6 +151,14 @@ class GameManager(Entity):
         # Board Updates
         self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()
+
+    def show_game_ui(self) -> None:
+        for entity in self.game_ui_entities:
+            entity.active = True
+
+    def hide_game_ui(self) -> None:
+        for entity in self.game_ui_entities:
+            entity.active = False
 
     def show_main_menu(self) -> None:
         for i, entity in enumerate(self.main_menu_entities):

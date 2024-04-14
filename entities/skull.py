@@ -19,7 +19,6 @@ class Skull(Entity):
         self.board: Board | None = None
 
         self.sprite = AnimatedSprite.empty()
-        self.visible = False
 
         self.tile: Tile | None = None
         self.team: str = ""
@@ -28,6 +27,7 @@ class Skull(Entity):
         self.convert_neighbor_delay = .1
         self.convert_neighbor_timer = 0
 
+        self.is_killed = False
         self.kill_timer = 0
 
     def awake(self) -> None:
@@ -68,6 +68,7 @@ class Skull(Entity):
         self.destroy()
 
     def kill(self, delay: float) -> None:
+        self.is_killed = True
         self.kill_timer = delay
         self.tile.skull = None
         self.tile = None
@@ -75,16 +76,16 @@ class Skull(Entity):
     def update(self) -> None:
         self.update_timers()
 
-        if self.kill_timer <= 0:
-            self.destroy()
-            return
+        if self.is_killed:
+            if self.kill_timer <= 0:
+                self.destroy()
+                return
 
         if self.neighbors_to_convert:
-            if self.visible:
-                if self.convert_neighbor_timer <= 0:
-                    self.convert_neighbor_timer = self.convert_neighbor_delay
-                    direction, neighbor = self.neighbors_to_convert.pop()
-                    self.convert_neighbor(direction, neighbor)
+            if self.convert_neighbor_timer <= 0:
+                self.convert_neighbor_timer = self.convert_neighbor_delay
+                direction, neighbor = self.neighbors_to_convert.pop()
+                self.convert_neighbor(direction, neighbor)
 
         self.sprite.update()
 
@@ -93,17 +94,17 @@ class Skull(Entity):
         if self.convert_neighbor_timer < 0:
             self.convert_neighbor_timer = 0
 
-        self.kill_timer -= Time.delta_time
-        if self.kill_timer < 0:
-            self.kill_timer = 0
+        if self.is_killed:
+            self.kill_timer -= Time.delta_time
+            if self.kill_timer < 0:
+                self.kill_timer = 0
 
     def convert_neighbor(self, direction: str, neighbor: Skull) -> None:
         blast = ConvertBlast.create(self, direction)
         blast.target = neighbor
 
     def draw(self, camera: Camera) -> None:
-        if self.visible:
-            self.sprite.draw(camera, self.position())
+        self.sprite.draw(camera, self.position())
 
     def on_deactivate(self) -> None:
         if self.team == "blue":
