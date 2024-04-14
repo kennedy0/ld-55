@@ -48,6 +48,12 @@ class Board(Entity):
             (3, -3, 0),
         ]
 
+        self.missing_tile_coordinates = [
+            [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
+            [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],
+            [(-2, 3, -1), (-1, 3, -2), (1, 2, -3), (2, 1, -3), (3, -1, -2), (3, -2, -1), (2, -3, 1), (1, -3, 2), (-1, -2, 3), (-2, -1, 3), (-3, 1, 2), (-3, 2, 1)],
+        ]
+
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
 
@@ -93,8 +99,11 @@ class Board(Entity):
         self.valid_blue_tiles.clear()
         self.valid_red_tiles.clear()
 
+        coordinates_to_remove = random.choice(self.missing_tile_coordinates)
         for tile in self.iter_tiles():
-            self.new_game_tiles.append(tile)
+            tile.enabled = False
+            if tile.coordinates not in coordinates_to_remove:
+                self.new_game_tiles.append(tile)
 
         self.total_tiles = len(self.new_game_tiles)
 
@@ -120,6 +129,7 @@ class Board(Entity):
         random.shuffle(tiles)
 
         for i, tile in enumerate(tiles):
+            tile.clear_highlight()
             if skull := tile.skull:
                 skull.kill(delay=i * .05)
             tile.hide(delay=.5 + (i * .05))

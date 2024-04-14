@@ -176,7 +176,6 @@ class Tile(Entity):
         self.reveal_finished = False
         self.hide_started = True
         self.hide_finished = False
-        self.visible = True
         self.enabled = False
         self.hide_delay = delay
         self.hide_timer = self.hide_max_time
