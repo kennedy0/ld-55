@@ -51,6 +51,8 @@ class Player(Entity):
         tile.skull = skull
         skull.tile = tile
         skull.summoned_by_player = True
+        skull.get_neighboring_opponents()
+        self.game_manager.next_turn_delay = len(skull.neighbors_to_convert) * .3
 
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True

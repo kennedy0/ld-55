@@ -21,7 +21,6 @@ class Skull(Entity):
         self.tile: Tile | None = None
         self.team: str = ""
 
-        self.summoned_by_player = False
         self.neighbors_to_convert: list[tuple[str, Skull]] = []
 
         self.convert_neighbor_delay = .1
@@ -33,8 +32,6 @@ class Skull(Entity):
 
     def start(self) -> None:
         self.board = self.find("Board")
-        if self.summoned_by_player:
-            self.get_neighboring_opponents()
 
     def get_neighboring_opponents(self) -> None:
         for direction, tile in self.tile.neighbors.items():

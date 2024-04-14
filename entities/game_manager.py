@@ -23,7 +23,8 @@ class GameManager(Entity):
 
         self.turn_ended = False
 
-        self.time_between_turns = 1
+        self.next_turn_delay = 0
+        self.time_between_turns = .2
         self.turn_end_timer = 0
 
     def start(self) -> None:
@@ -55,7 +56,7 @@ class GameManager(Entity):
 
     def on_turn_ended(self) -> None:
         # Start in-between-turns timer
-        self.turn_end_timer = self.time_between_turns
+        self.turn_end_timer = self.time_between_turns + self.next_turn_delay
 
         # Set next player
         if self.current_player == self.blue_player:
