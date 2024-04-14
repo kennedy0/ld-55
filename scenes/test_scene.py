@@ -7,6 +7,7 @@ from entities.game_manager import GameManager
 from entities.red_player import RedPlayer
 from entities.summon_circle import SummonCircle
 from entities.tile import Tile
+from entities.ui_score import UiScore
 
 
 class TestScene(Scene):
@@ -35,6 +36,9 @@ class TestScene(Scene):
 
         red_player = RedPlayer()
         self.entities.add(red_player)
+
+        # UI
+        self.entities.add(UiScore())
 
         # ToDo: TESTING
         game_manager.current_player = blue_player
