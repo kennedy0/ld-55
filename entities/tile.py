@@ -33,26 +33,10 @@ class Tile(Entity):
 
         self.skull: Skull | None = None
 
-        self._blue_can_summon = False
-        self._red_can_summon = False
+        self.blue_can_summon = False
+        self.red_can_summon = False
 
         self.debug_text = Text("fonts/NotJamOldStyle11.11.png")
-
-    @property
-    def blue_can_summon(self) -> bool:
-        return self._blue_can_summon
-
-    @blue_can_summon.setter
-    def blue_can_summon(self, value: bool) -> None:
-        self._blue_can_summon = value
-
-    @property
-    def red_can_summon(self) -> bool:
-        return self._red_can_summon
-
-    @red_can_summon.setter
-    def red_can_summon(self, value: bool) -> None:
-        self._red_can_summon = value
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -88,6 +72,6 @@ class Tile(Entity):
         if self.mouse_hovering():
             self.position().draw(camera, Color.white())
             self.debug_text.text = self.coordinates
-            self.debug_text.draw(camera, self.position())
+            self.debug_text.draw(camera, self.position() + Point(8, 8))
         else:
             self.position().draw(camera, Color.gray())

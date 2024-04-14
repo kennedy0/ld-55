@@ -78,4 +78,5 @@ class GameManager(Entity):
         self.next_player = None
 
         # Board Updates
+        self.board.update_valid_tiles_for_summoning()
         self.board.set_tile_highlights()

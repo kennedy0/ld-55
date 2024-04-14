@@ -102,6 +102,19 @@ class Board(Entity):
                 if player.can_summon_on_tile(tile):
                     tile.set_highlight(color)
 
+    def update_valid_tiles_for_summoning(self) -> None:
+        for tile in self.iter_tiles():
+            if tile.skull:
+                tile.blue_can_summon = False
+                tile.red_can_summon = False
+            else:
+                for n in tile.neighbors.values():
+                    if s := n.skull:
+                        if s.team == "blue":
+                            tile.blue_can_summon = True
+                        if s.team == "red":
+                            tile.red_can_summon = True
+
     @staticmethod
     def tile_to_world_position(q: int, r: int, s: int) -> Point:
         """ Convert a tile coordinate to world position. """
