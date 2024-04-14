@@ -12,6 +12,7 @@ class ConvertBlast(Entity):
     def __init__(self) -> None:
         super().__init__()
         self.sprite = AnimatedSprite.empty()
+        self.target: Skull | None = None
 
     @classmethod
     def create(cls, parent: Skull, direction: str) -> Self:
@@ -28,6 +29,7 @@ class ConvertBlast(Entity):
     def update(self) -> None:
         self.sprite.update()
         if not self.sprite.is_playing:
+            self.target.convert()
             self.destroy()
 
     def draw(self, camera: Camera) -> None:

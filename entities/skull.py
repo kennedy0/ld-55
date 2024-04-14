@@ -31,6 +31,7 @@ class Skull(Entity):
             if skull := tile.skull:
                 if self.team != skull.team:
                     blast = ConvertBlast.create(self, direction)
+                    blast.target = skull
 
     def convert(self) -> None:
         from entities.blue_skull import BlueSkull
