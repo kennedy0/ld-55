@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 
 from typing import Self
 
@@ -15,6 +16,8 @@ class Explosion(Entity):
         e = cls()
         e.sprite = AnimatedSprite.from_atlas("atlas.png", f"{color}_explosion")
         e.sprite.pivot.set_center()
+        e.sprite.flip_vertical = pmath.random_bool()
+        e.sprite.flip_horizontal = pmath.random_bool()
         e.sprite.play("default")
         e.sprite.get_animation("default").loop = False
         parent.scene.entities.add(e)

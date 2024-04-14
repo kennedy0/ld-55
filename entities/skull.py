@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING
 
 from engine import *
@@ -19,7 +20,12 @@ class Skull(Entity):
         self.sprite = AnimatedSprite.empty()
         self.tile: Tile | None = None
         self.team: str = ""
+
         self.summoned_by_player = False
+        self.neighbors_to_convert: list[tuple[str, Skull]] = []
+
+        self.convert_neighbor_delay = .1
+        self.convert_neighbor_timer = 0
 
     def awake(self) -> None:
         self.sprite.pivot.set_bottom_center()
@@ -28,14 +34,14 @@ class Skull(Entity):
     def start(self) -> None:
         self.board = self.find("Board")
         if self.summoned_by_player:
-            self.convert_neighbors()
+            self.get_neighboring_opponents()
 
-    def convert_neighbors(self) -> None:
+    def get_neighboring_opponents(self) -> None:
         for direction, tile in self.tile.neighbors.items():
             if skull := tile.skull:
                 if self.team != skull.team:
-                    blast = ConvertBlast.create(self, direction)
-                    blast.target = skull
+                    self.neighbors_to_convert.append((direction, skull))
+        random.shuffle(self.neighbors_to_convert)
 
     def convert(self) -> None:
         from entities.blue_skull import BlueSkull
@@ -54,7 +60,24 @@ class Skull(Entity):
         self.destroy()
 
     def update(self) -> None:
+        self.update_timers()
+
+        if self.neighbors_to_convert:
+            if self.convert_neighbor_timer <= 0:
+                self.convert_neighbor_timer = self.convert_neighbor_delay
+                direction, neighbor = self.neighbors_to_convert.pop()
+                self.convert_neighbor(direction, neighbor)
+
         self.sprite.update()
+
+    def update_timers(self) -> None:
+        self.convert_neighbor_timer -= Time.delta_time
+        if self.convert_neighbor_timer < 0:
+            self.convert_neighbor_timer = 0
+
+    def convert_neighbor(self, direction: str, neighbor: Skull) -> None:
+        blast = ConvertBlast.create(self, direction)
+        blast.target = neighbor
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())
