@@ -197,3 +197,9 @@ class Tile(Entity):
             self.debug_text.draw(camera, self.position() + Point(2, 2))
         else:
             self.position().draw(camera, Color.gray())
+
+    def distance_to(self, other: Tile) -> int:
+        dq = abs(self.q - other.q)
+        dr = abs(self.r - other.r)
+        ds = abs(self.s - other.s)
+        return int((dq + dr + ds) / 2)

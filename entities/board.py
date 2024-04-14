@@ -226,6 +226,23 @@ class Board(Entity):
                 if tile.red_can_summon:
                     self.valid_red_tiles.append(tile)
 
+    def update_valid_tiles_for_sacrifice(self, sacrifice_tile: Tile) -> None:
+        self.valid_blue_tiles.clear()
+        self.valid_red_tiles.clear()
+
+        for tile in self.iter_tiles():
+            tile.blue_can_summon = False
+            tile.red_can_summon = False
+
+            if tile.is_free() and tile.distance_to(sacrifice_tile) == 2:
+                if team := sacrifice_tile.skull.team:
+                    if team == "blue":
+                        tile.blue_can_summon = True
+                        self.valid_blue_tiles.append(tile)
+                    if team == "red":
+                        tile.red_can_summon = True
+                        self.valid_red_tiles.append(tile)
+
     def update_tile_counts(self) -> None:
         self.free_tiles = 0
         self.blue_tiles = 0

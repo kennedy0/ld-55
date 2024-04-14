@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import random
+import math
 from typing import TYPE_CHECKING
 
 from engine import *
 
+from entities.explosion import Explosion
 from entities.convert_blast import ConvertBlast
 from entities.summon_fx import SummonFx
 
@@ -27,6 +29,9 @@ class Skull(Entity):
         self.convert_neighbor_delay = .1
         self.convert_neighbor_timer = 0
         self.summoned_by_player = False
+
+        self.marked_for_sacrifice = False
+        self.sacrifice_glow = 0
 
         self.summon_sfx: list[SoundEffect] = [
             SoundEffect("sfx/summon1.wav"),
@@ -100,6 +105,27 @@ class Skull(Entity):
         self.tile.skull = new_skull
         self.destroy()
 
+    def mark_for_sacrifice(self) -> None:
+        self.sacrifice_glow = 255
+        self.marked_for_sacrifice = True
+
+    def unmark_for_sacrifice(self) -> None:
+        self.sacrifice_glow = 0
+        self.marked_for_sacrifice = False
+
+    def sacrifice(self) -> None:
+        explosion = Explosion.create(self, self.team)
+        explosion.x = self.x
+        explosion.y = self.y - 6
+
+        sfx = random.choice(self.explosion_sfx)
+        sfx.play()
+
+        self.tile.skull = None
+        self.tile = None
+
+        self.destroy()
+
     def kill(self, delay: float) -> None:
         self.is_killed = True
         self.kill_timer = delay
@@ -139,6 +165,13 @@ class Skull(Entity):
         sfx.play()
 
     def draw(self, camera: Camera) -> None:
+        if self.marked_for_sacrifice:
+            flash_percent = abs(math.sin(math.radians(self.sacrifice_glow)))
+            self.sprite.flash_opacity = int(255 * flash_percent)
+            self.sacrifice_glow += 3
+        else:
+            self.sprite.flash_opacity = 0
+
         self.sprite.draw(camera, self.position())
 
     def on_deactivate(self) -> None:

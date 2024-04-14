@@ -18,7 +18,7 @@ class SummonFx(Entity):
     def create(cls, parent: Skull) -> Self:
         fx = cls()
         fx.parent = parent
-        parent.scene.entities.add(fx)
+        Engine.scene().entities.add(fx)
         fx.x = parent.x
         fx.y = parent.y - 6
 

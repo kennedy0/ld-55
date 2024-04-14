@@ -29,7 +29,7 @@ class ConvertBlast(Entity):
         cb.sprite.get_animation("default").set_duration(400)  # original duration = 500
         cb.x = parent.x
         cb.y = parent.y - 6
-        parent.scene.entities.add(cb)
+        Engine.scene().entities.add(cb)
         return cb
 
     def update(self) -> None:

@@ -20,7 +20,7 @@ class Explosion(Entity):
         e.sprite.flip_horizontal = pmath.random_bool()
         e.sprite.play("default")
         e.sprite.get_animation("default").loop = False
-        parent.scene.entities.add(e)
+        Engine.scene().entities.add(e)
         return e
 
     def update(self) -> None:

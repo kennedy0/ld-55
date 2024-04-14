@@ -5,6 +5,7 @@ from engine import *
 from entities.board import Board
 from entities.game_manager import GameManager
 from entities.tile import Tile
+from entities.skull import Skull
 from entities.red_skull import RedSkull
 from entities.blue_skull import BlueSkull
 
@@ -31,6 +32,8 @@ class Player(Entity):
         self.has_summoned = False
 
         self.tutorial_step_started = False
+
+        self.skull_marked_for_sacrifice: Skull | None = None
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -93,6 +96,10 @@ class Player(Entity):
             Log.error("Not red or blue")
             return
 
+        if self.skull_marked_for_sacrifice:
+            self.skull_marked_for_sacrifice.sacrifice()
+            self.skull_marked_for_sacrifice = None
+
         self.scene.entities.add(skull)
         skull.x = tile.x
         skull.y = tile.y + 4
@@ -102,16 +109,43 @@ class Player(Entity):
         skull.get_neighboring_opponents()
         self.game_manager.next_turn_delay = len(skull.neighbors_to_convert) * .3
 
+    def mark_skull_for_sacrifice(self, skull: Skull) -> None:
+        self.skull_marked_for_sacrifice = skull
+        skull.mark_for_sacrifice()
+        self.board.update_valid_tiles_for_sacrifice(skull.tile)
+        self.board.set_tile_highlights()
+
+    def unmark_skull_for_sacrifice(self, skull: Skull) -> None:
+        self.skull_marked_for_sacrifice = None
+        skull.unmark_for_sacrifice()
+        self.board.update_valid_tiles_for_summoning()
+        self.board.set_tile_highlights()
+
     def end_turn(self) -> None:
         self.game_manager.turn_ended = True
 
     def update_human_input(self) -> None:
+        if self.skull_marked_for_sacrifice:
+            if Mouse.get_right_mouse_down():
+                self.unmark_skull_for_sacrifice(self.skull_marked_for_sacrifice)
+                return
+
         if Mouse.get_left_mouse_down():
             if tile := self.board.hovered_tile:
                 if tile.is_free():
                     if self.can_summon_on_tile(tile):
                         self.summon_skull(tile)
                         self.end_turn()
+                        return
+            if self.skull_marked_for_sacrifice:
+                self.unmark_skull_for_sacrifice(self.skull_marked_for_sacrifice)
+                return
+
+        if Mouse.get_right_mouse_down():
+            if tile := self.board.hovered_tile:
+                if skull := tile.skull:
+                    if skull.team == self.team:
+                        self.mark_skull_for_sacrifice(skull)
 
     def update_computer_input(self) -> None:
         # Delay when thinking
