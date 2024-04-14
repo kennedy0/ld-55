@@ -24,7 +24,12 @@ class MainMenuEntity(GuiWidgetEntity):
         self.normal_color = Color(169, 188, 191)
         self.hover_color = Color(230, 238, 237)
 
+        self.fade_in = False
+        self.fade_out = False
         self.is_animating = False
+        self.delay = 0
+        self.timer = 0
+        self.max_timer = 1
 
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
@@ -32,14 +37,22 @@ class MainMenuEntity(GuiWidgetEntity):
         self.y = 0
 
     def show(self, delay: float) -> None:
+        self.fade_in = True
+        self.fade_out = False
         self.active = True
         self.is_animating = True
         self.hovering = False
+        self.timer = self.max_timer
+        self.delay = delay
 
     def hide(self, delay: float) -> None:
+        self.fade_in = False
+        self.fade_out = True
         self.active = False
         self.is_animating = True
         self.hovering = False
+        self.timer = self.max_timer
+        self.delay = delay
 
     def on_mouse_enter(self) -> None:
         if self.is_animating:
@@ -50,9 +63,33 @@ class MainMenuEntity(GuiWidgetEntity):
         self.hovering = False
 
     def update(self) -> None:
+        self.update_timers()
+        if self.is_animating:
+            self.animate()
+            if self.timer <= 0:
+                self.is_animating = False
+
         if self.hovering:
             if Mouse.get_left_mouse_down():
                 pass
+
+    def update_timers(self) -> None:
+        self.delay -= Time.delta_time
+        if self.delay <= 0:
+            self.delay = 0
+            self.timer -= Time.delta_time
+            if self.timer <= 0:
+                self.timer = 0
+
+    def animate(self) -> None:
+        t = pmath.remap(self.timer, self.max_timer, 0, 0, 1)
+
+        if self.fade_in:
+            opacity = pmath.lerp(0, 255, t)
+        else:
+            opacity = pmath.lerp(255, 0, t)
+
+        self.text.opacity = opacity
 
     def draw(self, camera: Camera) -> None:
         if self.hovering:
