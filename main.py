@@ -2,7 +2,7 @@ import sys
 
 from engine import *
 
-from scenes.test_scene import TestScene
+from scenes.main_scene import MainScene
 
 
 def main() -> int:
@@ -11,7 +11,7 @@ def main() -> int:
     Window.init_default()
     Renderer.init_default()
     Input.init_default()
-    scene = TestScene()
+    scene = MainScene()
     Engine.start(scene)
     return 0
 

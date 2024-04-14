@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import random
 from typing import TYPE_CHECKING
 
 from engine import *
@@ -19,6 +21,11 @@ class Tile(Entity):
         self.s = 0
         self.coordinates = (0, 0, 0)
 
+        self.reveal_started = False
+        self.reveal_finished = False
+        self.visible = False
+        self.enabled = False
+
         self.northwest: Tile | None = None
         self.north: Tile | None = None
         self.northeast: Tile | None = None
@@ -34,6 +41,13 @@ class Tile(Entity):
 
         self.blue_can_summon = False
         self.red_can_summon = False
+
+        self.reveal_delay = 0
+        self.reveal_timer = 0
+        self.reveal_max_time = 2
+
+        self.reveal_y_start = 0
+        self.reveal_y_offset = 0
 
         self.debug_text = Text("fonts/NotJamOldStyle11.11.png")
 
@@ -58,14 +72,48 @@ class Tile(Entity):
         return False
 
     def is_free(self) -> bool:
+        if not self.enabled:
+            return False
+
         if self.skull:
             return False
 
         return True
 
     def update(self) -> None:
-        if self.mouse_hovering():
-            self.board.hovered_tile = self
+        if self.reveal_started:
+            if self.reveal_timer > 0:
+                self.update_timers()
+                self.animate_reveal()
+            elif not self.reveal_finished:
+                self.reveal_finished = True
+                self.enabled = True
+                self.board.revealed_tiles += 1
+                self.sprite.color = None
+                self.sprite.opacity = 255
+                self.clear_highlight()
+
+        if self.enabled:
+            if self.mouse_hovering():
+                self.board.hovered_tile = self
+
+    def update_timers(self) -> None:
+        self.reveal_delay -= Time.delta_time
+        if self.reveal_delay <= 0:
+            self.reveal_delay = 0
+
+        if self.reveal_delay <= 0:
+            self.visible = True
+            self.reveal_timer -= Time.delta_time
+            if self.reveal_timer <= 0:
+                self.reveal_timer = 0
+
+    def animate_reveal(self) -> None:
+        if self.visible:
+            t = (self.reveal_max_time - self.reveal_timer) / self.reveal_max_time
+            self.sprite.flash_color = Color.white()
+            self.sprite.flash_opacity = int(pmath.lerp(255, 0, t))
+            self.reveal_y_offset = int(pmath.lerp(self.reveal_y_start, 0, t))
 
     def set_highlight(self, color: Color) -> None:
         self.sprite.flash_color = color
@@ -75,8 +123,26 @@ class Tile(Entity):
         self.sprite.flash_color = Color.white()
         self.sprite.flash_opacity = 0
 
+    def reveal(self, delay: float) -> None:
+        self.reveal_started = True
+        self.reveal_finished = False
+        self.reveal_delay = delay
+        self.reveal_timer = self.reveal_max_time
+
+        self.reveal_y_start = random.randint(-100, 100)
+        self.reveal_y_offset = self.reveal_y_start
+
+    def hide(self) -> None:
+        self.reveal_started = False
+        self.reveal_finished = False
+        self.visible = False
+        self.enabled = False
+
     def draw(self, camera: Camera) -> None:
-        self.sprite.draw(camera, self.position())
+        if self.visible:
+            x = self.x
+            y = self.y + self.reveal_y_offset
+            self.sprite.draw(camera, Point(x, y))
 
     def debug_draw(self, camera: Camera) -> None:
         if self.mouse_hovering():

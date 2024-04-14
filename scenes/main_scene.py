@@ -11,7 +11,7 @@ from entities.ui_score import UiScore
 from entities.ui_start_game import UiStartGame
 
 
-class TestScene(Scene):
+class MainScene(Scene):
     def setup_cameras(self) -> None:
         # Center camera
         self.main_camera.x = -160
@@ -45,9 +45,6 @@ class TestScene(Scene):
         # UI
         self.build_main_menu()
         self.entities.add(UiScore())
-
-        # ToDo: TESTING
-        # game_manager.next_player = blue_player
 
     def generate_board(self, radius: int) -> None:
         # Create board

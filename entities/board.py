@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import random
 from typing import Iterator, Optional, TYPE_CHECKING
 
 from engine import *
@@ -41,6 +42,9 @@ class Board(Entity):
         self.valid_blue_tiles = []
         self.valid_red_tiles = []
 
+        self.revealed_tiles = 0
+        self.tiles_in_play = 0
+
         self.game_manager: GameManager | None = None
 
     def start(self) -> None:
@@ -79,6 +83,17 @@ class Board(Entity):
             tile.set_position(self.tile_to_world_position(tile.q, tile.r, tile.s))
             tile.z_depth = -tile.y + 100
 
+    def reveal_tiles(self) -> None:
+        self.revealed_tiles = 0
+        self.tiles_in_play = 0
+
+        tiles = list(self.iter_tiles())
+        random.shuffle(tiles)
+
+        for i, tile in enumerate(tiles):
+            self.tiles_in_play += 1
+            tile.reveal(i * .05)
+
     def iter_tiles(self) -> Iterator[Tile]:
         """ Iterate over all tiles. """
         for tile in self.get_tiles(0, 0, 0, self.radius):
@@ -115,7 +130,7 @@ class Board(Entity):
             tile.blue_can_summon = False
             tile.red_can_summon = False
 
-            if not tile.skull:
+            if tile.is_free():
                 if tile.coordinates in self.blue_start_coordinates:
                     tile.blue_can_summon = True
                 elif tile.coordinates in self.red_start_coordinates:

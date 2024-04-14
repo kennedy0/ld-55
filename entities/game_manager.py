@@ -20,6 +20,9 @@ class GameManager(Entity):
         self.board: Board | None = None
         self.main_menu_entities: list[Entity] = []
 
+        # Game start
+        self.board_setup_finished = False
+
         # Current player
         self.current_player: Player | None = None
         self.next_player: Player | None = None
@@ -46,6 +49,12 @@ class GameManager(Entity):
     def update(self) -> None:
         self.update_timers()
 
+        # Board setup
+        if not self.board_setup_finished:
+            if self.board.revealed_tiles == self.board.tiles_in_play:
+                self.board_setup_finished = True
+                self.on_board_setup_finished()
+
         # End Turn
         if self.turn_ended:
             self.turn_ended = False
@@ -62,10 +71,16 @@ class GameManager(Entity):
             self.turn_end_timer = 0
 
     def start_game(self) -> None:
-        self.on_game_start()
-
-    def on_game_start(self) -> None:
         self.hide_main_menu()
+
+        # Do board setup
+        self.board_setup_finished = False
+        self.board.reveal_tiles()
+
+    def on_board_setup_finished(self) -> None:
+        # Board updates
+        self.board.update_valid_tiles_for_summoning()
+        self.board.set_tile_highlights()
 
         # Set first player
         self.next_player = self.blue_player
