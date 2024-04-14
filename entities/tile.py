@@ -33,6 +33,8 @@ class Tile(Entity):
 
         self.skull: Skull | None = None
 
+        self.debug_text = Text("fonts/NotJamOldStyle11.11.png")
+
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.board = self.find("Board")
@@ -68,5 +70,7 @@ class Tile(Entity):
     def debug_draw(self, camera: Camera) -> None:
         if self.mouse_hovering():
             self.position().draw(camera, Color.white())
+            self.debug_text.text = self.coordinates
+            self.debug_text.draw(camera, self.position())
         else:
             self.position().draw(camera, Color.gray())
