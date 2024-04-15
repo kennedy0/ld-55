@@ -58,9 +58,32 @@ class Player(Entity):
             for tile in self.board.valid_red_tiles:
                 self.possible_tiles.append(tile)
 
+            strategies = ["random", "optimal", "optimal"]
+            strategy = random.choice(strategies)
+
             # Pick a move
-            if self.possible_tiles:
-                self.target_tile = random.choice(self.possible_tiles)
+            if strategy == "optimal":
+                Log.info("Optimal")
+                best_tile = None
+                opponent_count = 0
+                for tile in self.possible_tiles:
+                    oc = 0
+                    for _, n in tile.neighbors.items():
+                        if skull := n.skull:
+                            if skull.team != self.team:
+                                oc += 1
+                    if not best_tile:
+                        best_tile = tile
+                    if oc > opponent_count:
+                        best_tile = tile
+                        opponent_count = oc
+                if best_tile:
+                    Log.info(f"{best_tile.coordinates} is the optimal tile with {opponent_count} opponents")
+                    self.target_tile = best_tile
+            else:
+                Log.info("Random")
+                if self.possible_tiles:
+                    self.target_tile = random.choice(self.possible_tiles)
 
     def update(self) -> None:
         if not self.is_my_turn():
