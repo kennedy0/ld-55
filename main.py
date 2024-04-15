@@ -6,7 +6,7 @@ from scenes.main_scene import MainScene
 
 
 def main() -> int:
-    Game.init(name="HEXX - LD55", version="v1")
+    Game.init(name="HEXX - LD55", version="v1.1")
     Engine.init_default()
     Window.init_default()
     Renderer.init_default()
