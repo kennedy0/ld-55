@@ -129,15 +129,15 @@ class Skull(Entity):
     def kill(self, delay: float) -> None:
         self.is_killed = True
         self.kill_timer = delay
-        self.tile.skull = None
-        self.tile = None
+        # self.tile.skull = None
+        # self.tile = None
 
     def update(self) -> None:
         self.update_timers()
 
         if self.is_killed:
             if self.kill_timer <= 0:
-                self.destroy()
+                self.sacrifice()
                 return
 
         if self.neighbors_to_convert:

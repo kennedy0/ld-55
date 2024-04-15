@@ -60,6 +60,7 @@ class GameManager(Entity):
         self.tutorial_step_started = False
         self.tutorial_delay_timer = 0
         self.tutorial_game_end_message = ""
+        self.tutorial_complete = False
 
     def start(self) -> None:
         self.board = self.find("Board")
@@ -102,6 +103,7 @@ class GameManager(Entity):
                 self.forfeit_timer = 0
                 self.game_ended = True
                 if self.is_tutorial:
+                    self.tutorial_complete = True
                     self.tutorial_game_end_message = "Tutorial\nCancelled"
                 self.check_for_game_end()
                 return
@@ -143,8 +145,11 @@ class GameManager(Entity):
 
     def start_game(self) -> None:
         Log.info("Start Game!")
+        self.blue_player.left_click_disabled = False
+        self.blue_player.right_click_disabled = False
         if self.is_tutorial:
             Log.info("Tutorial mode")
+            self.tutorial_complete = False
             self.tutorial_step = 0
             self.tutorial_step_started = True
             self.tutorial_game_end_message = "Tutorial\nComplete"
@@ -229,6 +234,10 @@ class GameManager(Entity):
         # Force an update of the tile counts
         self.board.update_tile_counts()
 
+        # Game never ends automatically in tutorial
+        if self.is_tutorial and not self.tutorial_complete:
+            return
+
         # Check end conditions
         if self.board.free_tiles == 0:
             Log.info("No more free tiles")
@@ -247,6 +256,8 @@ class GameManager(Entity):
             self.score_calculated = False
             self.current_player = None
             self.next_player = None
+            self.blue_player.left_click_disabled = False
+            self.blue_player.right_click_disabled = False
 
     def update_game_end(self) -> None:
         # Calculate final score
@@ -288,6 +299,7 @@ class GameManager(Entity):
 
     def update_tutorial(self) -> None:
         if self.tutorial_step == 0:
+            self.blue_player.right_click_disabled = True
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
                 self.tutorial_text.show_text("Summon a spirit")
@@ -338,7 +350,7 @@ class GameManager(Entity):
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
                 self.red_player.tutorial_step_started = True
-                self.tutorial_text.show_text("You are vulnerable, too")
+                self.tutorial_text.show_text("You are vulnerable too")
             else:
                 # Conditions to proceed
                 if self.current_player == self.blue_player:
@@ -351,8 +363,58 @@ class GameManager(Entity):
                 self.tutorial_text.show_text("Summon the most spirits to win")
             else:
                 # Conditions to proceed
-                if False:
+                if self.board.free_tiles == 0:
                     self.next_tutorial_step()
+
+        if self.tutorial_step == 7:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.blue_player.left_click_disabled = True
+                self.blue_player.right_click_disabled = False
+                self.tutorial_text.show_text("One final lesson")
+                coordinates = [(-1, 1, 0), (-1, 0, 1), (0, 1, -1), (0, 0, 0), (0, -1, 1)]
+                for i, c in enumerate(coordinates):
+                    if tile := self.board.get_tile(*c):
+                        if skull := tile.skull:
+                            skull.kill(i * .5)
+                coordinates = [(1, 0, -1), (1, -1, 0), (2, -1, -1)]
+                for c in coordinates:
+                    if tile := self.board.get_tile(*c):
+                        if skull := tile.skull:
+                            if skull.team == "blue":
+                                skull.convert()
+            else:
+                # Conditions to proceed
+                self.board.update_tile_counts()
+                if self.board.free_tiles == 5:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 8:
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("Sacrifice a spirit (right-click)")
+            else:
+                # Conditions to proceed
+                if self.blue_player.skull_marked_for_sacrifice:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 9:
+            self.blue_player.left_click_disabled = False
+            if self.tutorial_step_started:
+                self.tutorial_step_started = False
+                self.tutorial_text.show_text("Summon from afar")
+            else:
+                # Conditions to proceed
+                if self.current_player == self.red_player:
+                    self.next_tutorial_step()
+
+        if self.tutorial_step == 10:
+            if self.tutorial_step_started:
+                self.game_ended = True
+                self.tutorial_complete = True
+                self.tutorial_game_end_message = "Tutorial\nComplete"
+                self.tutorial_text.show_text("")
+                self.check_for_game_end()
 
     def next_tutorial_step(self) -> None:
         self.tutorial_step += 1

@@ -32,6 +32,8 @@ class Player(Entity):
         self.has_summoned = False
 
         self.tutorial_step_started = False
+        self.left_click_disabled = False
+        self.right_click_disabled = False
 
         self.skull_marked_for_sacrifice: Skull | None = None
 
@@ -127,25 +129,30 @@ class Player(Entity):
     def update_human_input(self) -> None:
         if self.skull_marked_for_sacrifice:
             if Mouse.get_right_mouse_down():
+                if self.game_manager.is_tutorial:
+                    # Force the player to go through with the action in the tutorial
+                    return
                 self.unmark_skull_for_sacrifice(self.skull_marked_for_sacrifice)
                 return
 
-        if Mouse.get_left_mouse_down():
-            if tile := self.board.hovered_tile:
-                if tile.is_free():
-                    if self.can_summon_on_tile(tile):
-                        self.summon_skull(tile)
-                        self.end_turn()
-                        return
-            if self.skull_marked_for_sacrifice:
-                self.unmark_skull_for_sacrifice(self.skull_marked_for_sacrifice)
-                return
+        if not self.left_click_disabled:
+            if Mouse.get_left_mouse_down():
+                if tile := self.board.hovered_tile:
+                    if tile.is_free():
+                        if self.can_summon_on_tile(tile):
+                            self.summon_skull(tile)
+                            self.end_turn()
+                            return
+                if self.skull_marked_for_sacrifice:
+                    self.unmark_skull_for_sacrifice(self.skull_marked_for_sacrifice)
+                    return
 
-        if Mouse.get_right_mouse_down():
-            if tile := self.board.hovered_tile:
-                if skull := tile.skull:
-                    if skull.team == self.team:
-                        self.mark_skull_for_sacrifice(skull)
+        if not self.right_click_disabled:
+            if Mouse.get_right_mouse_down():
+                if tile := self.board.hovered_tile:
+                    if skull := tile.skull:
+                        if skull.team == self.team:
+                            self.mark_skull_for_sacrifice(skull)
 
     def update_computer_input(self) -> None:
         # Delay when thinking
@@ -192,11 +199,12 @@ class Player(Entity):
                 self.end_turn()
 
         if self.game_manager.tutorial_step in (5, 6):
-            tile = self.board.valid_red_tiles[0]
-            if self.tutorial_step_started:
-                self.tutorial_step_started = False
-                self.focus = tile.position()
-                self.thinking_timer = 2
-            else:
-                self.summon_skull(tile)
-                self.end_turn()
+            if self.board.valid_red_tiles:
+                tile = self.board.valid_red_tiles[0]
+                if self.tutorial_step_started:
+                    self.tutorial_step_started = False
+                    self.focus = tile.position()
+                    self.thinking_timer = 2
+                else:
+                    self.summon_skull(tile)
+                    self.end_turn()
