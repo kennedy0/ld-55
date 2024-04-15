@@ -27,6 +27,7 @@ class Player(Entity):
         self.focus = Point(999, 999)
         self.possible_tiles = []
         self.target_tile: Tile | None = None
+        self.target_skull_to_sacrifice: Skull | None = None
 
         self.has_focused_tile = False
         self.has_summoned = False
@@ -50,6 +51,7 @@ class Player(Entity):
             self.thinking_timer = self.thinking_timer_max
             self.focus = Point(999, 999)
             self.target_tile = None
+            self.target_skull_to_sacrifice = None
             self.possible_tiles.clear()
             self.has_focused_tile = False
             self.has_summoned = False
@@ -64,6 +66,8 @@ class Player(Entity):
             # Pick a move
             if strategy == "optimal":
                 Log.info("Optimal")
+
+                # Find best tile to move to
                 best_tile = None
                 opponent_count = 0
                 for tile in self.possible_tiles:
@@ -77,9 +81,45 @@ class Player(Entity):
                     if oc > opponent_count:
                         best_tile = tile
                         opponent_count = oc
-                if best_tile:
-                    Log.info(f"{best_tile.coordinates} is the optimal tile with {opponent_count} opponents")
-                    self.target_tile = best_tile
+
+                Log.info(f"Best tile: {best_tile.coordinates} with {opponent_count} opponents")
+
+                # Find best tile for sacrificing
+                sacrifice_tile = None
+                sacrifice_skull = None
+                sacrifice_opponent_count = 0
+                for tile in self.board.iter_tiles():
+                    if skull := tile.skull:
+                        if skull.team == self.team:
+                            # Possible skull to sacrifice
+                            for t in self.board.iter_tiles():
+                                if t.is_free():
+                                    if t.distance_to(tile) == 2:
+                                        soc = 0
+                                        for _, n in t.neighbors.items():
+                                            if s := n.skull:
+                                                if s.team != self.team:
+                                                    soc += 1
+                                        if soc > sacrifice_opponent_count:
+                                            sacrifice_tile = t
+                                            sacrifice_opponent_count = soc
+                                            sacrifice_skull = skull
+                            pass
+
+                skull_to_sacrifice = None
+                if sacrifice_opponent_count > opponent_count and sacrifice_tile and sacrifice_skull:
+                    optimal_tile = sacrifice_tile
+                    skull_to_sacrifice = sacrifice_skull
+                    opponent_count = sacrifice_opponent_count
+                else:
+                    optimal_tile = best_tile
+
+                if optimal_tile:
+                    Log.info(f"{optimal_tile.coordinates} is the optimal tile with {opponent_count} opponents")
+                    self.target_tile = optimal_tile
+                    if skull_to_sacrifice:
+                        Log.info(f"Sacrificing skull on tile {skull_to_sacrifice.tile.coordinates}")
+                        self.target_skull_to_sacrifice = skull_to_sacrifice
             else:
                 Log.info("Random")
                 if self.possible_tiles:
@@ -188,6 +228,8 @@ class Player(Entity):
             self.thinking_timer = self.thinking_timer_max
             if self.target_tile:
                 self.focus = self.target_tile.position()
+                if self.target_skull_to_sacrifice:
+                    self.mark_skull_for_sacrifice(self.target_skull_to_sacrifice)
             return
 
         # Make move
