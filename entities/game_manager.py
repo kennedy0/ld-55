@@ -112,10 +112,10 @@ class GameManager(Entity):
 
         # Check for no valid turns for current player - skip turn
         if not self.turn_ended:
-            if self.current_player == self.blue_player and len(self.board.valid_blue_tiles) == 0:
+            if self.current_player == self.blue_player and len(self.board.valid_blue_tiles) == 0 and not self.board.blue_has_sacrifice_moves():
                 Log.info("No valid moves for blue - skipping turn")
                 self.turn_ended = True
-            elif self.current_player == self.red_player and len(self.board.valid_red_tiles) == 0:
+            elif self.current_player == self.red_player and len(self.board.valid_red_tiles) == 0 and not self.board.red_has_sacrifice_moves():
                 Log.info("No valid moves for red - skipping turn")
                 self.turn_ended = True
 

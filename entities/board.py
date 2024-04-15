@@ -283,3 +283,23 @@ class Board(Entity):
                 self.valid_blue_tiles.append(tile)
 
         self.set_tile_highlights()
+
+    def blue_has_sacrifice_moves(self) -> bool:
+        for tile in self.iter_tiles():
+            if skull := tile.skull:
+                if skull.team == "blue":
+                    for t in self.iter_tiles():
+                        if t.is_free():
+                            if tile.distance_to(t) == 2:
+                                return True
+        return False
+
+    def red_has_sacrifice_moves(self) -> bool:
+        for tile in self.iter_tiles():
+            if skull := tile.skull:
+                if skull.team == "red":
+                    for t in self.iter_tiles():
+                        if t.is_free():
+                            if tile.distance_to(t) == 2:
+                                return True
+        return False
