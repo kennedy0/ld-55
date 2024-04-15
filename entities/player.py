@@ -82,7 +82,8 @@ class Player(Entity):
                         best_tile = tile
                         opponent_count = oc
 
-                Log.info(f"Best tile: {best_tile.coordinates} with {opponent_count} opponents")
+                if best_tile:
+                    Log.info(f"Best tile: {best_tile.coordinates} with {opponent_count} opponents")
 
                 # Find best tile for sacrificing
                 sacrifice_tile = None
