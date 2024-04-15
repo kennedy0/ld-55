@@ -58,8 +58,8 @@ class MainScene(Scene):
         self.entities.add(UiTutorial())
         self.entities.add(Ui1p())
         self.entities.add(Ui2p())
-        self.entities.add(UiQuitGame())
         self.entities.add(UiSound())
+        self.entities.add(UiQuitGame())
 
         # End Game
         self.entities.add(UiGameEnded())

@@ -11,7 +11,7 @@ class UiTutorial(MainMenuEntity):
         self.width = self.text.width
         self.height = self.text.height
 
-        self.row = 0
+        self.row = 1
 
     def update(self) -> None:
         super().update()
