@@ -10,7 +10,7 @@ icon = project_root / "icon.png"
 builds = project_root / "builds"
 
 
-app_name = "LD55"
+app_name = "HEXX-LD55"
 script_file = project_root / "main.py"
 content_root = project_root / "content"
 
