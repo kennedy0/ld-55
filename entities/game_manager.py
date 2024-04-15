@@ -369,8 +369,8 @@ class GameManager(Entity):
         if self.tutorial_step == 7:
             if self.tutorial_step_started:
                 self.tutorial_step_started = False
-                self.blue_player.left_click_disabled = True
                 self.blue_player.right_click_disabled = False
+                self.blue_player.left_click_disabled = True
                 self.tutorial_text.show_text("One final lesson")
                 coordinates = [(-1, 1, 0), (-1, 0, 1), (0, 1, -1), (0, 0, 0), (0, -1, 1)]
                 for i, c in enumerate(coordinates):
@@ -391,6 +391,8 @@ class GameManager(Entity):
 
         if self.tutorial_step == 8:
             if self.tutorial_step_started:
+                if self.current_player == self.red_player:
+                    self.red_player.end_turn()
                 self.tutorial_step_started = False
                 self.tutorial_text.show_text("Sacrifice a spirit (right-click)")
             else:

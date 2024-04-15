@@ -36,7 +36,7 @@ debug_build_settings = BuildSettings(
 )
 
 release_build_settings = BuildSettings(
-    one_file=True,
+    one_file=False,
     quiet=True,
     debug=False,
     output_folder=builds,
