@@ -12,6 +12,7 @@ from entities.ui_score import UiScore
 from entities.ui_game_ended import UiGameEnded
 from entities.ui_tutorial_text import UiTutorialText
 
+from entities.title import Title
 from entities.ui_tutorial import UiTutorial
 from entities.ui_1p import Ui1p
 from entities.ui_2p import Ui2p
@@ -55,6 +56,7 @@ class MainScene(Scene):
         self.entities.add(UiTutorialText())
 
         # Main Menu
+        self.entities.add(Title())
         self.entities.add(UiTutorial())
         self.entities.add(Ui1p())
         self.entities.add(Ui2p())
