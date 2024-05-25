@@ -262,9 +262,11 @@ class Board(Entity):
 
         for tile in self.valid_blue_tiles[:]:
             if tile.coordinates in self.red_start_coordinates:
+                tile.blue_can_summon = False
                 self.valid_blue_tiles.remove(tile)
         for tile in self.valid_red_tiles[:]:
             if tile.coordinates in self.blue_start_coordinates:
+                tile.red_can_summon = False
                 self.valid_red_tiles.remove(tile)
 
     def update_tile_counts(self) -> None:
