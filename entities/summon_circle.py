@@ -35,6 +35,11 @@ class SummonCircle(Entity):
         self.red_sprite.update()
 
         self.visible = False
+
+        if self.game_manager.is_tutorial:
+            if self.game_manager.tutorial_step == 8:
+                return
+
         if player := self.game_manager.current_player:
             if tile := self.board.hovered_tile:
                 if player.can_summon_on_tile(tile):

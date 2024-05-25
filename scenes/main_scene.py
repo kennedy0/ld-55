@@ -11,13 +11,15 @@ from entities.tile import Tile
 from entities.ui_score import UiScore
 from entities.ui_game_ended import UiGameEnded
 from entities.ui_tutorial_text import UiTutorialText
+from entities.ui_forfeit import UiForfeit
 
 from entities.title import Title
 from entities.ui_tutorial import UiTutorial
 from entities.ui_1p import Ui1p
 from entities.ui_2p import Ui2p
-from entities.ui_quit_game import UiQuitGame
+from entities.ui_board import UiBoard
 from entities.ui_sound import UiSound
+from entities.ui_quit_game import UiQuitGame
 
 
 class MainScene(Scene):
@@ -54,12 +56,14 @@ class MainScene(Scene):
         # UI
         self.entities.add(UiScore())
         self.entities.add(UiTutorialText())
+        self.entities.add(UiForfeit())
 
         # Main Menu
         self.entities.add(Title())
         self.entities.add(UiTutorial())
         self.entities.add(Ui1p())
         self.entities.add(Ui2p())
+        self.entities.add(UiBoard())
         self.entities.add(UiSound())
         self.entities.add(UiQuitGame())
 

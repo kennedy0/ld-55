@@ -132,6 +132,8 @@ class Player(Entity):
 
         self.update_timers()
 
+        if self.game_manager.blue_auto_win or self.game_manager.red_auto_win:
+            self.update_auto_win_input()
         if self.controller == "computer":
             self.update_computer_input()
         elif self.controller == "tutorial":
@@ -274,3 +276,21 @@ class Player(Entity):
                 else:
                     self.summon_skull(tile)
                     self.end_turn()
+
+    def update_auto_win_input(self) -> None:
+        tiles = list(self.board.iter_tiles())
+        random.shuffle(tiles)
+
+        if self.game_manager.red_auto_win and self.team == "red":
+            for tile in tiles:
+                if tile.is_free():
+                    self.summon_skull(tile)
+                    self.end_turn()
+                    return
+
+        if self.game_manager.blue_auto_win and self.team == "blue":
+            for tile in tiles:
+                if tile.is_free():
+                    self.summon_skull(tile)
+                    self.end_turn()
+                    return

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING
 
 from engine import *
@@ -34,6 +35,13 @@ class MainMenuEntity(GuiWidgetEntity):
 
         self.row = 0
 
+        self.sfx: list[SoundEffect] = [
+            SoundEffect("sfx/tone_1.wav"),
+            SoundEffect("sfx/tone_2.wav"),
+            SoundEffect("sfx/tone_3.wav"),
+            SoundEffect("sfx/tone_4.wav"),
+        ]
+
     def start(self) -> None:
         self.game_manager = self.find("GameManager")
         self.x = 160 - self.text.width / 2
@@ -61,6 +69,7 @@ class MainMenuEntity(GuiWidgetEntity):
         if self.is_animating:
             return
         self.hovering = True
+        random.choice(self.sfx).play()
 
     def on_mouse_exit(self) -> None:
         self.hovering = False

@@ -44,6 +44,8 @@ class GameManager(Entity):
         self.game_ended = False
         self.turn_ended = False
         self.score_calculated = False
+        self.blue_auto_win = False
+        self.red_auto_win = False
 
         # Between turns timer
         self.next_turn_delay = 0
@@ -110,14 +112,22 @@ class GameManager(Entity):
         else:
             self.forfeit_timer = 0
 
-        # Check for no valid turns for current player - skip turn
-        if not self.turn_ended:
-            if self.current_player == self.blue_player and len(self.board.valid_blue_tiles) == 0 and not self.board.blue_has_sacrifice_moves():
-                Log.info("No valid moves for blue - skipping turn")
-                self.turn_ended = True
-            elif self.current_player == self.red_player and len(self.board.valid_red_tiles) == 0 and not self.board.red_has_sacrifice_moves():
-                Log.info("No valid moves for red - skipping turn")
-                self.turn_ended = True
+        # Check for no valid turns for current player - auto-win
+        if self.red_auto_win is False and self.blue_auto_win is False:
+            if not self.turn_ended:
+                if self.current_player == self.blue_player and len(self.board.valid_blue_tiles) == 0 and not self.board.blue_has_sacrifice_moves():
+                    Log.info("No valid moves for blue - red auto-wins")
+                    self.red_auto_win = True
+                    self.turn_ended = True
+                elif self.current_player == self.red_player and len(self.board.valid_red_tiles) == 0 and not self.board.red_has_sacrifice_moves():
+                    Log.info("No valid moves for red - blue auto-wins")
+                    self.blue_auto_win = True
+                    self.turn_ended = True
+
+        if self.current_player == self.red_player and self.blue_auto_win:
+            self.turn_ended = True
+        if self.current_player == self.blue_player and self.red_auto_win:
+            self.turn_ended = True
 
         # End Turn
         if self.turn_ended:
@@ -159,6 +169,8 @@ class GameManager(Entity):
         self.game_ended = False
         self.turn_ended = False
         self.score_calculated = False
+        self.blue_auto_win = False
+        self.red_auto_win = False
         self.hide_main_menu()
 
         # Do board setup
@@ -182,7 +194,10 @@ class GameManager(Entity):
 
     def on_turn_ended(self) -> None:
         # Start in-between-turns timer
-        self.turn_end_timer = self.time_between_turns + self.next_turn_delay
+        if self.red_auto_win or self.blue_auto_win:
+            self.turn_end_timer = .05
+        else:
+            self.turn_end_timer = self.time_between_turns + self.next_turn_delay
 
         # Set next player
         if self.current_player == self.blue_player:
@@ -371,7 +386,7 @@ class GameManager(Entity):
                 self.tutorial_step_started = False
                 self.blue_player.right_click_disabled = False
                 self.blue_player.left_click_disabled = True
-                self.tutorial_text.show_text("One final lesson")
+                self.tutorial_text.show_text("One more lesson...")
                 coordinates = [(-1, 1, 0), (-1, 0, 1), (0, 1, -1), (0, 0, 0), (0, -1, 1)]
                 for i, c in enumerate(coordinates):
                     if tile := self.board.get_tile(*c):
@@ -391,6 +406,7 @@ class GameManager(Entity):
 
         if self.tutorial_step == 8:
             if self.tutorial_step_started:
+                self.board.set_tile_highlights()
                 if self.current_player == self.red_player:
                     self.red_player.end_turn()
                 self.tutorial_step_started = False
@@ -403,9 +419,14 @@ class GameManager(Entity):
         if self.tutorial_step == 9:
             self.blue_player.left_click_disabled = False
             if self.tutorial_step_started:
+                self.board.set_tile_highlights()
                 self.tutorial_step_started = False
                 self.tutorial_text.show_text("Summon from afar")
             else:
+                if self.current_player == self.blue_player and not self.blue_player.skull_marked_for_sacrifice:
+                    self.previous_tutorial_step()
+                    self.blue_player.left_click_disabled = True
+                    return
                 # Conditions to proceed
                 if self.current_player == self.red_player:
                     self.next_tutorial_step()
@@ -420,6 +441,10 @@ class GameManager(Entity):
 
     def next_tutorial_step(self) -> None:
         self.tutorial_step += 1
+        self.tutorial_step_started = True
+
+    def previous_tutorial_step(self) -> None:
+        self.tutorial_step -= 1
         self.tutorial_step_started = True
 
     def tutorial_delay(self, delay: float) -> None:

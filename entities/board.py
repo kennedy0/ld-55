@@ -54,10 +54,9 @@ class Board(Entity):
         self.tutorial_blue_start_coordinates = [(-2, 1, 1)]
         self.tutorial_red_start_coordinates = [(2, -1, -1)]
 
+        self.board_layout = 0
         self.missing_tile_coordinates = [
             [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
-            [(0, 1, -1), (-1, 0, 1), (1, -1, 0)],
-            [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],
             [(0, 0, 0), (-1, 1, 0), (1, 0, -1), (0, -1, 1)],
             [(-2, 3, -1), (-1, 3, -2), (1, 2, -3), (2, 1, -3), (3, -1, -2), (3, -2, -1), (2, -3, 1), (1, -3, 2), (-1, -2, 3), (-2, -1, 3), (-3, 1, 2), (-3, 2, 1)],
         ]
@@ -134,6 +133,8 @@ class Board(Entity):
 
         if self.game_manager.is_tutorial:
             coordinates_to_remove = self.missing_tile_coordinates_for_tutorial
+        elif self.board_layout in (0, 1, 2):
+            coordinates_to_remove = self.missing_tile_coordinates[self.board_layout]
         else:
             coordinates_to_remove = random.choice(self.missing_tile_coordinates)
 
@@ -190,15 +191,24 @@ class Board(Entity):
                         yield self.get_tile(i, j, k)
 
     def set_tile_highlights(self):
+        if self.game_manager.tutorial_step == 8:
+            for tile in self.iter_tiles():
+                tile.clear_highlight()
+            return
+
+        if self.game_manager.red_auto_win or self.game_manager.blue_auto_win:
+            for tile in self.iter_tiles():
+                tile.clear_highlight()
+            return
+
         player = self.game_manager.current_player
         if player:
             color = player.tile_highlight_color
-
-        for tile in self.iter_tiles():
-            tile.clear_highlight()
-            if player:
-                if player.can_summon_on_tile(tile):
-                    tile.set_highlight(color)
+            for tile in self.iter_tiles():
+                tile.clear_highlight()
+                if player:
+                    if player.can_summon_on_tile(tile):
+                        tile.set_highlight(color)
 
     def update_valid_tiles_for_summoning(self) -> None:
         self.valid_blue_tiles.clear()
@@ -226,6 +236,14 @@ class Board(Entity):
                 if tile.red_can_summon:
                     self.valid_red_tiles.append(tile)
 
+        if Engine.debug_mode():
+            print(f"Valid tiles for blue:")
+            for t in self.valid_blue_tiles:  # type: Tile
+                print(f"\t{t.coordinates}")
+            print(f"Valid tiles for red:")
+            for t in self.valid_red_tiles:  # type: Tile
+                print(f"\t{t.coordinates}")
+
     def update_valid_tiles_for_sacrifice(self, sacrifice_tile: Tile) -> None:
         self.valid_blue_tiles.clear()
         self.valid_red_tiles.clear()
@@ -236,12 +254,20 @@ class Board(Entity):
 
             if tile.is_free() and tile.distance_to(sacrifice_tile) == 2:
                 if team := sacrifice_tile.skull.team:
-                    if team == "blue":
+                    if team == "blue" and tile.coordinates not in self.red_start_coordinates:
                         tile.blue_can_summon = True
                         self.valid_blue_tiles.append(tile)
-                    if team == "red":
+                    if team == "red" and tile.coordinates not in self.blue_start_coordinates:
                         tile.red_can_summon = True
                         self.valid_red_tiles.append(tile)
+
+        if Engine.debug_mode():
+            print(f"Valid tiles for blue:")
+            for t in self.valid_blue_tiles:  # type: Tile
+                print(f"\t{t.coordinates}")
+            print(f"Valid tiles for red:")
+            for t in self.valid_red_tiles:  # type: Tile
+                print(f"\t{t.coordinates}")
 
     def update_tile_counts(self) -> None:
         self.free_tiles = 0
@@ -291,7 +317,8 @@ class Board(Entity):
                     for t in self.iter_tiles():
                         if t.is_free():
                             if tile.distance_to(t) == 2:
-                                return True
+                                if t.coordinates not in self.red_start_coordinates:
+                                    return True
         return False
 
     def red_has_sacrifice_moves(self) -> bool:
@@ -301,5 +328,6 @@ class Board(Entity):
                     for t in self.iter_tiles():
                         if t.is_free():
                             if tile.distance_to(t) == 2:
-                                return True
+                                if t.coordinates not in self.blue_start_coordinates:
+                                    return True
         return False

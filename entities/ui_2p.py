@@ -6,12 +6,13 @@ from entities.main_menu_entity import MainMenuEntity
 class Ui2p(MainMenuEntity):
     def __init__(self) -> None:
         super().__init__()
+        self.name = "Ui2p"
 
         self.text.text = "2 Players"
         self.width = self.text.width
         self.height = self.text.height
 
-        self.row = 3
+        self.row = 2
 
     def update(self) -> None:
         super().update()

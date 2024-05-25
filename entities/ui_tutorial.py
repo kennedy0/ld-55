@@ -6,12 +6,13 @@ from entities.main_menu_entity import MainMenuEntity
 class UiTutorial(MainMenuEntity):
     def __init__(self) -> None:
         super().__init__()
+        self.name = "UiTutorial"
 
         self.text.text = "How to Play"
         self.width = self.text.width
         self.height = self.text.height
 
-        self.row = 1
+        self.row = 0
 
     def update(self) -> None:
         super().update()

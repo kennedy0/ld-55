@@ -6,6 +6,7 @@ from entities.main_menu_entity import MainMenuEntity
 class UiQuitGame(MainMenuEntity):
     def __init__(self) -> None:
         super().__init__()
+        self.name = "UiQuitGame"
 
         self.text.text = "Exit"
         self.width = self.text.width

@@ -2,6 +2,13 @@ from engine import *
 
 from entities.main_menu_entity import MainMenuEntity
 
+from entities.ui_tutorial import UiTutorial
+from entities.ui_1p import Ui1p
+from entities.ui_2p import Ui2p
+from entities.ui_board import UiBoard
+from entities.ui_sound import UiSound
+from entities.ui_quit_game import UiQuitGame
+
 
 class Title(MainMenuEntity):
     def __init__(self) -> None:
@@ -18,12 +25,20 @@ class Title(MainMenuEntity):
         self.red.play("default")
         self.red.scale = 1
 
-        self.row = -2
+        self.buttons: list[MainMenuEntity] = []
 
     def start(self) -> None:
         super().start()
         self.x = 0
-        self.y = 0
+        self.y = -10
+        self.buttons = [
+            self.find("UiTutorial"),
+            self.find("Ui1p"),
+            self.find("Ui2p"),
+            self.find("UiBoard"),
+            self.find("UiSound"),
+            self.find("UiQuitGame"),
+        ]
 
     def animate(self) -> None:
         t = pmath.remap(self.timer, self.max_timer, 0, 0, 1)
@@ -41,5 +56,5 @@ class Title(MainMenuEntity):
 
     def draw(self, camera: Camera) -> None:
         self.sprite.draw(camera, self.position())
-        self.blue.draw(camera, Point(80, 35))
-        self.red.draw(camera, Point(242, 35))
+        self.blue.draw(camera, Point(80, 25))
+        self.red.draw(camera, Point(242, 25))
