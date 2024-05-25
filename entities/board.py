@@ -236,13 +236,12 @@ class Board(Entity):
                 if tile.red_can_summon:
                     self.valid_red_tiles.append(tile)
 
-        if Engine.debug_mode():
-            print(f"Valid tiles for blue:")
-            for t in self.valid_blue_tiles:  # type: Tile
-                print(f"\t{t.coordinates}")
-            print(f"Valid tiles for red:")
-            for t in self.valid_red_tiles:  # type: Tile
-                print(f"\t{t.coordinates}")
+        for tile in self.valid_blue_tiles[:]:
+            if tile.coordinates in self.red_start_coordinates:
+                self.valid_blue_tiles.remove(tile)
+        for tile in self.valid_red_tiles[:]:
+            if tile.coordinates in self.blue_start_coordinates:
+                self.valid_red_tiles.remove(tile)
 
     def update_valid_tiles_for_sacrifice(self, sacrifice_tile: Tile) -> None:
         self.valid_blue_tiles.clear()
@@ -254,20 +253,19 @@ class Board(Entity):
 
             if tile.is_free() and tile.distance_to(sacrifice_tile) == 2:
                 if team := sacrifice_tile.skull.team:
-                    if team == "blue" and tile.coordinates not in self.red_start_coordinates:
+                    if team == "blue":
                         tile.blue_can_summon = True
                         self.valid_blue_tiles.append(tile)
-                    if team == "red" and tile.coordinates not in self.blue_start_coordinates:
+                    if team == "red":
                         tile.red_can_summon = True
                         self.valid_red_tiles.append(tile)
 
-        if Engine.debug_mode():
-            print(f"Valid tiles for blue:")
-            for t in self.valid_blue_tiles:  # type: Tile
-                print(f"\t{t.coordinates}")
-            print(f"Valid tiles for red:")
-            for t in self.valid_red_tiles:  # type: Tile
-                print(f"\t{t.coordinates}")
+        for tile in self.valid_blue_tiles[:]:
+            if tile.coordinates in self.red_start_coordinates:
+                self.valid_blue_tiles.remove(tile)
+        for tile in self.valid_red_tiles[:]:
+            if tile.coordinates in self.blue_start_coordinates:
+                self.valid_red_tiles.remove(tile)
 
     def update_tile_counts(self) -> None:
         self.free_tiles = 0
